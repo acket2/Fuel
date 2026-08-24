@@ -28,7 +28,6 @@ export interface DeliveryLocation {
   regionId: RegionId;
   regionName: string;
   distanceKm: number;
-  minDeliveryHours: number;
   popularVolume: string;
   depotHub: string;
 }
@@ -40,7 +39,6 @@ export interface RegionInfo {
   description: string;
   depotHubs: string[];
   expressAvailable: boolean;
-  deliveryTimeRange: string;
   iconName: string;
 }
 
@@ -57,8 +55,9 @@ export interface CalculationResult {
   estimatedCostRub: number;
   truckType: string;
   truckSections: number;
-  estimatedDeliveryTime: string;
 }
+
+export type OrderStatus = 'new' | 'processing' | 'shipped' | 'completed' | 'cancelled';
 
 export interface OrderLeadData {
   id: string;
@@ -77,4 +76,5 @@ export interface OrderLeadData {
   paymentType: 'cashless_vat' | 'cashless_no_vat' | 'consultation';
   needHosePump: boolean;
   comment: string;
+  status?: OrderStatus;
 }

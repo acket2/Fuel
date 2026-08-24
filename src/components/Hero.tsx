@@ -116,7 +116,7 @@ export const Hero: React.FC<HeroProps> = ({
                       }`}
                     >
                       <div className="font-bold text-[11px] sm:text-xs leading-snug">{reg.name}</div>
-                      <div className="text-[10px] text-amber-700 dark:text-amber-400/90 font-mono mt-1">{reg.deliveryTimeRange}</div>
+                      <div className="text-[10px] text-amber-700 dark:text-amber-400/90 font-mono mt-1">Спецпарк СНК</div>
                     </button>
                   );
                 })}
@@ -278,8 +278,8 @@ export const Hero: React.FC<HeroProps> = ({
                   <span>Паспорт качества ГОСТ</span>
                 </div>
                 <div className="flex items-center gap-1.5 font-medium">
-                  <Clock className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
-                  <span>Подача от 1 часа</span>
+                  <Truck className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
+                  <span>Собственный автопарк</span>
                 </div>
               </div>
 

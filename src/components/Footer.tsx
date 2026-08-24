@@ -15,9 +15,10 @@ import { REGIONS_LIST } from '../data/regionsData';
 
 interface FooterProps {
   onOpenVerificationModal?: (tab?: 'company' | 'passport' | 'arbitrage') => void;
+  onOpenAdminModal?: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onOpenVerificationModal }) => {
+export const Footer: React.FC<FooterProps> = ({ onOpenVerificationModal, onOpenAdminModal }) => {
   const phone1 = '89041480038';
   const phone1Display = '8 (904) 148-00-38';
   const phone2 = '89834149769';
@@ -171,6 +172,17 @@ export const Footer: React.FC<FooterProps> = ({ onOpenVerificationModal }) => {
             <span>Безналичный расчет</span>
             <span>ГОСТ 32511-2013</span>
             <span>Паспорта качества</span>
+            {onOpenAdminModal && (
+              <button
+                type="button"
+                onClick={onOpenAdminModal}
+                className="text-slate-400 hover:text-amber-500 flex items-center gap-1 transition-colors cursor-pointer"
+                title="Вход в панель администратора"
+              >
+                <Lock className="w-3 h-3" />
+                <span>Панель диспетчера</span>
+              </button>
+            )}
           </div>
         </div>
 

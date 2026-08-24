@@ -21,7 +21,7 @@ import {
 import { FuelProduct, DeliveryLocation, VolumeUnit, OrderLeadData } from '../types';
 import { DIESEL_FUEL_PRODUCTS } from '../data/fuelData';
 import { REGIONS_LIST, DELIVERY_LOCATIONS } from '../data/regionsData';
-import { sendLeadToTelegram, getTelegramConfig } from '../utils/telegramNotify';
+import { processNewLead, getTelegramConfig, getEmailConfig } from '../utils/telegramNotify';
 
 interface OrderSectionProps {
   onOpenTelegramSettings: () => void;
@@ -107,9 +107,17 @@ export const OrderSection: React.FC<OrderSectionProps> = ({
 
     setLastSubmittedLead(lead);
 
-    // Send to Telegram
-    const tgRes = await sendLeadToTelegram(lead);
-    setTelegramStatusMsg(tgRes.message);
+    // Process lead: saves locally for Admin, sends to Telegram, sends to Email
+    const result = await processNewLead(lead);
+    
+    let statusMsg = '';
+    if (result.telegramResult?.message) {
+      statusMsg = result.telegramResult.message;
+    }
+    if (result.emailResult?.message) {
+      statusMsg += ` • ${result.emailResult.message}`;
+    }
+    setTelegramStatusMsg(statusMsg || 'Заявка передана в диспетчерскую службу');
 
     setIsSubmitting(false);
     setIsSuccess(true);
@@ -152,7 +160,7 @@ export const OrderSection: React.FC<OrderSectionProps> = ({
             >
               <BellRing className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" />
               <span>
-                {tgConfig.isEnabled ? '⚡ Telegram-уведомления подключены' : '🔔 Настроить моментальные пуш-уведомления на телефон'}
+                {tgConfig.isEnabled ? '⚡ Telegram-уведомления диспетчеру подключены' : '🔔 Настроить Telegram-бота и Email для диспетчера'}
               </span>
             </button>
 
@@ -174,15 +182,17 @@ export const OrderSection: React.FC<OrderSectionProps> = ({
                 <CheckCircle2 className="w-10 h-10" />
               </div>
 
-              <div className="space-y-2">
-                <span className="text-xs font-mono font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider">
-                  Заявка № {lastSubmittedLead.id}
-                </span>
+              <div className="space-y-3">
+                <div className="inline-block px-4 py-1.5 rounded-full bg-amber-500/20 border border-amber-500/50 text-amber-900 dark:text-amber-300 text-sm font-mono font-black uppercase tracking-wider">
+                  НОМЕР ВАШЕГО ЗАКАЗА: {lastSubmittedLead.id}
+                </div>
+                
                 <h3 className="text-2xl sm:text-3xl font-black text-slate-950 dark:text-white">
-                  Заявка успешно зарегистрирована!
+                  Спасибо за заявку! В скором времени с вами свяжутся.
                 </h3>
+                
                 <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                  Спасибо, <strong className="text-slate-950 dark:text-white">{lastSubmittedLead.fullName || 'уважаемый заказчик'}</strong>. Спецификация на объём <strong className="text-amber-600 dark:text-amber-400">{lastSubmittedLead.volumeM3} м³ ({lastSubmittedLead.volumeLiters.toLocaleString('ru-RU')} л)</strong> топлива <strong className="text-slate-950 dark:text-white">{lastSubmittedLead.fuelName}</strong> передана в дежурный диспетчерский пункт.
+                  Ваша заявка принята в работу дежурной сменой ООО «СНК». Номер заказа <strong className="font-mono text-amber-600 dark:text-amber-400 font-bold">{lastSubmittedLead.id}</strong> присвоен вашей партии. Дежурный логист уже готовит расчёт и свяжется с вами по номеру <strong className="font-mono text-slate-950 dark:text-white">{lastSubmittedLead.phone}</strong>.
                 </p>
               </div>
 

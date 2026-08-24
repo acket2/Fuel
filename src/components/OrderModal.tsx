@@ -19,7 +19,7 @@ import {
 import { FuelProduct, DeliveryLocation, CalculationResult, VolumeUnit, OrderLeadData } from '../types';
 import { DIESEL_FUEL_PRODUCTS } from '../data/fuelData';
 import { DELIVERY_LOCATIONS, REGIONS_LIST } from '../data/regionsData';
-import { sendLeadToTelegram, getTelegramConfig } from '../utils/telegramNotify';
+import { processNewLead, getTelegramConfig, getEmailConfig } from '../utils/telegramNotify';
 
 interface OrderModalProps {
   isOpen: boolean;
@@ -135,8 +135,15 @@ export const OrderModal: React.FC<OrderModalProps> = ({
 
     setLastLead(lead);
 
-    const res = await sendLeadToTelegram(lead);
-    setTelegramStatus(res.message);
+    const result = await processNewLead(lead);
+    let statusMsg = '';
+    if (result.telegramResult?.message) {
+      statusMsg = result.telegramResult.message;
+    }
+    if (result.emailResult?.message) {
+      statusMsg += ` • ${result.emailResult.message}`;
+    }
+    setTelegramStatus(statusMsg || 'Заявка принята');
 
     setIsSubmitting(false);
     setIsSubmitted(true);
@@ -182,15 +189,17 @@ export const OrderModal: React.FC<OrderModalProps> = ({
               <CheckCircle2 className="w-8 h-8" />
             </div>
 
-            <div className="space-y-2">
-              <span className="text-xs font-mono font-bold text-amber-600 dark:text-amber-400">
-                Заявка № {lastLead.id}
-              </span>
-              <h4 className="text-2xl font-black text-slate-950 dark:text-white">
-                Заявка успешно зарегистрирована!
+            <div className="space-y-3">
+              <div className="inline-block px-4 py-1.5 rounded-full bg-amber-500/20 border border-amber-500/50 text-amber-900 dark:text-amber-300 text-sm font-mono font-black uppercase tracking-wider">
+                НОМЕР ВАШЕГО ЗАКАЗА: {lastLead.id}
+              </div>
+              
+              <h4 className="text-2xl sm:text-3xl font-black text-slate-950 dark:text-white">
+                Спасибо за заявку! В скором времени с вами свяжутся.
               </h4>
+              
               <p className="text-sm text-slate-600 dark:text-slate-300 max-w-md mx-auto leading-relaxed">
-                Дежурный логист ООО «СНК» уже обрабатывает спецификацию партии ({lastLead.volumeM3} м³ / {lastLead.volumeLiters.toLocaleString('ru-RU')} л, {lastLead.fuelName} в {lastLead.destination}) и перезвонит вам в течение 5 минут.
+                Дежурный логист ООО «СНК» уже обрабатывает спецификацию партии ({lastLead.volumeM3} м³ / {lastLead.volumeLiters.toLocaleString('ru-RU')} л, {lastLead.fuelName} в {lastLead.destination}) и свяжется с вами в течение 5 минут по телефону <strong className="font-mono text-slate-950 dark:text-white">{lastLead.phone}</strong>.
               </p>
             </div>
 

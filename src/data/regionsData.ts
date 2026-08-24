@@ -8,7 +8,6 @@ export const REGIONS_LIST: RegionInfo[] = [
     description: 'Прямой налив с нефтебазы АО «АНХК» (Ангарск) и распределительных узлов ВСЖД.',
     depotHubs: ['Ангарский НПЗ (АНХК)', 'Иркутская нефтебаза', 'Усть-Кутский хаб'],
     expressAvailable: true,
-    deliveryTimeRange: 'от 1 до 24 ч',
     iconName: 'Building'
   },
   {
@@ -18,7 +17,6 @@ export const REGIONS_LIST: RegionInfo[] = [
     description: 'Поставки для горнорудных предприятий, строительных объектов (Амурский ГПЗ/ГХК) и транспортных узлов.',
     depotHubs: ['Благовещенский терминал', 'Белогорская нефтебаза', 'Тындинский узел'],
     expressAvailable: true,
-    deliveryTimeRange: 'от 3 до 36 ч',
     iconName: 'Compass'
   },
   {
@@ -28,7 +26,6 @@ export const REGIONS_LIST: RegionInfo[] = [
     description: 'Снабжение автоколонн, карьеров, приисков, золотодобычи и пограничных логистических терминалов.',
     depotHubs: ['Читинский нефтетерминал', 'Борзинский узел', 'Краснокаменск'],
     expressAvailable: true,
-    deliveryTimeRange: 'от 4 до 36 ч',
     iconName: 'Mountain'
   },
   {
@@ -38,7 +35,6 @@ export const REGIONS_LIST: RegionInfo[] = [
     description: 'Доставка по Улан-Удэ, побережью Байкала, промышленным и добывающим комплексам республики.',
     depotHubs: ['Улан-Удэнская нефтебаза', 'Северобайкальский хаб'],
     expressAvailable: true,
-    deliveryTimeRange: 'от 2 до 28 ч',
     iconName: 'MapPin'
   }
 ];
@@ -51,7 +47,6 @@ export const DELIVERY_LOCATIONS: DeliveryLocation[] = [
     regionId: 'irkutsk',
     regionName: 'Иркутская область',
     distanceKm: 42,
-    minDeliveryHours: 2,
     popularVolume: 'от 1 000 до 40 000 л',
     depotHub: 'Ангарский НПЗ'
   },
@@ -61,7 +56,6 @@ export const DELIVERY_LOCATIONS: DeliveryLocation[] = [
     regionId: 'irkutsk',
     regionName: 'Иркутская область',
     distanceKm: 8,
-    minDeliveryHours: 1,
     popularVolume: 'от 500 л (Прямой налив)',
     depotHub: 'Нефтебаза АНХК'
   },
@@ -71,7 +65,6 @@ export const DELIVERY_LOCATIONS: DeliveryLocation[] = [
     regionId: 'irkutsk',
     regionName: 'Иркутская область',
     distanceKm: 590,
-    minDeliveryHours: 12,
     popularVolume: 'от 20 000 л / Автопоезда 38м³',
     depotHub: 'Братский филиал'
   },
@@ -81,7 +74,6 @@ export const DELIVERY_LOCATIONS: DeliveryLocation[] = [
     regionId: 'irkutsk',
     regionName: 'Иркутская область',
     distanceKm: 940,
-    minDeliveryHours: 20,
     popularVolume: 'от 30 000 л / Ж/Д цистерны',
     depotHub: 'Усть-Кут Речпорт / ВСЖД'
   },
@@ -91,7 +83,6 @@ export const DELIVERY_LOCATIONS: DeliveryLocation[] = [
     regionId: 'irkutsk',
     regionName: 'Иркутская область',
     distanceKm: 1450,
-    minDeliveryHours: 36,
     popularVolume: 'Партии от 100 т (ДТ Арктика)',
     depotHub: 'Северный тракт'
   },
@@ -101,7 +92,6 @@ export const DELIVERY_LOCATIONS: DeliveryLocation[] = [
     regionId: 'irkutsk',
     regionName: 'Иркутская область',
     distanceKm: 105,
-    minDeliveryHours: 3.5,
     popularVolume: 'от 5 000 до 35 000 л',
     depotHub: 'Ангарский НПЗ'
   },
@@ -111,7 +101,6 @@ export const DELIVERY_LOCATIONS: DeliveryLocation[] = [
     regionId: 'irkutsk',
     regionName: 'Иркутская область',
     distanceKm: 650,
-    minDeliveryHours: 14,
     popularVolume: 'от 20 000 л',
     depotHub: 'Тайшетский хаб'
   },
@@ -123,7 +112,6 @@ export const DELIVERY_LOCATIONS: DeliveryLocation[] = [
     regionId: 'amur',
     regionName: 'Амурская область',
     distanceKm: 180,
-    minDeliveryHours: 4,
     popularVolume: 'от 5 000 до 40 000 л',
     depotHub: 'Благовещенская нефтебаза'
   },
@@ -133,7 +121,6 @@ export const DELIVERY_LOCATIONS: DeliveryLocation[] = [
     regionId: 'amur',
     regionName: 'Амурская область',
     distanceKm: 160,
-    minDeliveryHours: 3,
     popularVolume: 'от 10 000 до 120 000 л',
     depotHub: 'Свободненский терминал'
   },
@@ -143,7 +130,6 @@ export const DELIVERY_LOCATIONS: DeliveryLocation[] = [
     regionId: 'amur',
     regionName: 'Амурская область',
     distanceKm: 120,
-    minDeliveryHours: 2.5,
     popularVolume: 'от 5 000 до 38 000 л',
     depotHub: 'Белогорский хаб'
   },
@@ -153,7 +139,6 @@ export const DELIVERY_LOCATIONS: DeliveryLocation[] = [
     regionId: 'amur',
     regionName: 'Амурская область',
     distanceKm: 850,
-    minDeliveryHours: 18,
     popularVolume: 'от 25 000 л / Ж/Д цистерны',
     depotHub: 'Тындинский узел'
   },
@@ -163,7 +148,6 @@ export const DELIVERY_LOCATIONS: DeliveryLocation[] = [
     regionId: 'amur',
     regionName: 'Амурская область',
     distanceKm: 520,
-    minDeliveryHours: 11,
     popularVolume: 'от 15 000 л',
     depotHub: 'Зейский филиал'
   },
@@ -173,7 +157,6 @@ export const DELIVERY_LOCATIONS: DeliveryLocation[] = [
     regionId: 'amur',
     regionName: 'Амурская область',
     distanceKm: 660,
-    minDeliveryHours: 14,
     popularVolume: 'от 30 000 л',
     depotHub: 'Сковородинский узел'
   },
@@ -185,7 +168,6 @@ export const DELIVERY_LOCATIONS: DeliveryLocation[] = [
     regionId: 'zabaykalsky',
     regionName: 'Забайкальский край',
     distanceKm: 210,
-    minDeliveryHours: 4.5,
     popularVolume: 'от 5 000 до 40 000 л',
     depotHub: 'Читинский нефтетерминал'
   },
@@ -195,7 +177,6 @@ export const DELIVERY_LOCATIONS: DeliveryLocation[] = [
     regionId: 'zabaykalsky',
     regionName: 'Забайкальский край',
     distanceKm: 530,
-    minDeliveryHours: 12,
     popularVolume: 'от 25 000 л / Автоколонны',
     depotHub: 'Краснокаменский терминал'
   },
@@ -205,7 +186,6 @@ export const DELIVERY_LOCATIONS: DeliveryLocation[] = [
     regionId: 'zabaykalsky',
     regionName: 'Забайкальский край',
     distanceKm: 380,
-    minDeliveryHours: 8,
     popularVolume: 'от 10 000 до 35 000 л',
     depotHub: 'Борзинская нефтебаза'
   },
@@ -215,7 +195,6 @@ export const DELIVERY_LOCATIONS: DeliveryLocation[] = [
     regionId: 'zabaykalsky',
     regionName: 'Забайкальский край',
     distanceKm: 480,
-    minDeliveryHours: 10,
     popularVolume: 'от 20 000 л',
     depotHub: 'Таможенно-логистический хаб'
   },
@@ -225,7 +204,6 @@ export const DELIVERY_LOCATIONS: DeliveryLocation[] = [
     regionId: 'zabaykalsky',
     regionName: 'Забайкальский край',
     distanceKm: 610,
-    minDeliveryHours: 13,
     popularVolume: 'от 30 000 л / Карьерные комплексы',
     depotHub: 'Могочинский узел'
   },
@@ -237,7 +215,6 @@ export const DELIVERY_LOCATIONS: DeliveryLocation[] = [
     regionId: 'buryatia',
     regionName: 'Республика Бурятия (Бурятский АО)',
     distanceKm: 450,
-    minDeliveryHours: 8,
     popularVolume: 'от 2 000 до 40 000 л',
     depotHub: 'Улан-Удэнская нефтебаза'
   },
@@ -247,7 +224,6 @@ export const DELIVERY_LOCATIONS: DeliveryLocation[] = [
     regionId: 'buryatia',
     regionName: 'Республика Бурятия (Бурятский АО)',
     distanceKm: 810,
-    minDeliveryHours: 18,
     popularVolume: 'от 20 000 л',
     depotHub: 'Северобайкальский узел'
   },
@@ -257,7 +233,6 @@ export const DELIVERY_LOCATIONS: DeliveryLocation[] = [
     regionId: 'buryatia',
     regionName: 'Республика Бурятия (Бурятский АО)',
     distanceKm: 560,
-    minDeliveryHours: 10,
     popularVolume: 'от 15 000 до 50 000 л',
     depotHub: 'Гусиноозёрский филиал'
   },
@@ -267,7 +242,6 @@ export const DELIVERY_LOCATIONS: DeliveryLocation[] = [
     regionId: 'buryatia',
     regionName: 'Республика Бурятия (Бурятский АО)',
     distanceKm: 680,
-    minDeliveryHours: 12,
     popularVolume: 'от 20 000 л',
     depotHub: 'Кяхтинский терминал'
   }

@@ -17,10 +17,12 @@ import { OrderModal } from './components/OrderModal';
 import { CommercialOfferModal } from './components/CommercialOfferModal';
 import { TelegramSettingsModal } from './components/TelegramSettingsModal';
 import { CompanyVerificationModal } from './components/CompanyVerificationModal';
+import { AdminPanelModal } from './components/AdminPanelModal';
 import { REGIONS_LIST, DELIVERY_LOCATIONS } from './data/regionsData';
 import { DIESEL_FUEL_PRODUCTS } from './data/fuelData';
 import { RegionInfo, DeliveryLocation, FuelProduct, CalculationResult } from './types';
-import { PhoneCall, Calculator, Send, BellRing } from 'lucide-react';
+import { getSavedLeads } from './utils/telegramNotify';
+import { PhoneCall, Calculator, Send, BellRing, Lock } from 'lucide-react';
 
 export default function App() {
   const [selectedRegion, setSelectedRegion] = useState<RegionInfo>(REGIONS_LIST[0]); // Default: Irkutsk Oblast
@@ -31,11 +33,17 @@ export default function App() {
   const [orderModalOpen, setOrderModalOpen] = useState(false);
   const [offerModalOpen, setOfferModalOpen] = useState(false);
   const [telegramSettingsOpen, setTelegramSettingsOpen] = useState(false);
+  const [adminModalOpen, setAdminModalOpen] = useState(false);
   const [verificationModalOpen, setVerificationModalOpen] = useState(false);
   const [verificationTab, setVerificationTab] = useState<'company' | 'passport' | 'arbitrage'>('company');
   const [activeCalcResult, setActiveCalcResult] = useState<CalculationResult | null>(null);
+  const [ordersCount, setOrdersCount] = useState<number>(() => getSavedLeads().length);
 
   const phone1 = '89041480038';
+
+  const refreshOrdersCount = () => {
+    setOrdersCount(getSavedLeads().length);
+  };
 
   const handleOpenVerification = (tab: 'company' | 'passport' | 'arbitrage' = 'company') => {
     setVerificationTab(tab);
@@ -92,6 +100,8 @@ export default function App() {
         onScrollToCalculator={scrollToCalculator}
         onOpenTelegramSettings={() => setTelegramSettingsOpen(true)}
         onOpenVerificationModal={handleOpenVerification}
+        onOpenAdminModal={() => setAdminModalOpen(true)}
+        newOrdersCount={ordersCount}
       />
 
       {/* Main Page Layout */}
@@ -150,7 +160,10 @@ export default function App() {
       </main>
 
       {/* 9. Footer with Payment Notice, Verified INN, and Dual Phones */}
-      <Footer onOpenVerificationModal={handleOpenVerification} />
+      <Footer 
+        onOpenVerificationModal={handleOpenVerification} 
+        onOpenAdminModal={() => setAdminModalOpen(true)}
+      />
 
       {/* Floating Mobile Quick Contact / Calc Bar */}
       <div className="fixed bottom-4 right-4 z-30 flex items-center gap-2 sm:hidden">
@@ -195,6 +208,15 @@ export default function App() {
       <TelegramSettingsModal
         isOpen={telegramSettingsOpen}
         onClose={() => setTelegramSettingsOpen(false)}
+      />
+
+      <AdminPanelModal
+        isOpen={adminModalOpen}
+        onClose={() => {
+          setAdminModalOpen(false);
+          refreshOrdersCount();
+        }}
+        onOrdersUpdated={refreshOrdersCount}
       />
 
     </div>

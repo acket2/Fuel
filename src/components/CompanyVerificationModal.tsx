@@ -271,7 +271,7 @@ export const CompanyVerificationModal: React.FC<CompanyVerificationModalProps> =
                     href="https://pb.nalog.ru/search.html?mode=quick&query=3801146254"
                     target="_blank"
                     rel="noreferrer noopener"
-                    className="p-3.5 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 hover:border-amber-500/50 transition-all flex items-center justify-between group"
+                    className="p-3.5 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 hover:border-amber-500/50 transition-all flex items-center justify-between group cursor-pointer"
                   >
                     <div className="space-y-0.5">
                       <div className="font-bold text-white group-hover:text-amber-400 flex items-center gap-1.5">
@@ -290,7 +290,7 @@ export const CompanyVerificationModal: React.FC<CompanyVerificationModalProps> =
                     href="https://egrul.nalog.ru/"
                     target="_blank"
                     rel="noreferrer noopener"
-                    className="p-3.5 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 hover:border-amber-500/50 transition-all flex items-center justify-between group"
+                    className="p-3.5 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 hover:border-amber-500/50 transition-all flex items-center justify-between group cursor-pointer"
                   >
                     <div className="space-y-0.5">
                       <div className="font-bold text-white group-hover:text-amber-400 flex items-center gap-1.5">
@@ -309,7 +309,7 @@ export const CompanyVerificationModal: React.FC<CompanyVerificationModalProps> =
                     href="https://checko.ru/company/snk-1183850027845"
                     target="_blank"
                     rel="noreferrer noopener"
-                    className="p-3.5 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 hover:border-amber-500/50 transition-all flex items-center justify-between group"
+                    className="p-3.5 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 hover:border-amber-500/50 transition-all flex items-center justify-between group cursor-pointer"
                   >
                     <div className="space-y-0.5">
                       <div className="font-bold text-white group-hover:text-amber-400 flex items-center gap-1.5">
@@ -328,17 +328,55 @@ export const CompanyVerificationModal: React.FC<CompanyVerificationModalProps> =
                     href="https://www.rusprofile.ru/search?query=3801146254"
                     target="_blank"
                     rel="noreferrer noopener"
-                    className="p-3.5 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 hover:border-amber-500/50 transition-all flex items-center justify-between group"
+                    className="p-3.5 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 hover:border-amber-500/50 transition-all flex items-center justify-between group cursor-pointer"
                   >
                     <div className="space-y-0.5">
                       <div className="font-bold text-white group-hover:text-amber-400 flex items-center gap-1.5">
-                        <span>Rusprofile.ru (Поиск по ИНН)</span>
+                        <span>Rusprofile.ru (ИНН 3801146254)</span>
                         <ExternalLink className="w-3 h-3 text-slate-500 group-hover:text-amber-400" />
                       </div>
                       <p className="text-[11px] text-slate-400">Поиск в базе контрагентов по ИНН 3801146254</p>
                     </div>
                     <span className="px-2 py-1 rounded bg-slate-800 text-slate-300 font-mono text-[10px]">
                       Поиск
+                    </span>
+                  </a>
+
+                  {/* 5. Государственный информационный ресурс бухгалтерской отчетности (ГИР БО) */}
+                  <a
+                    href="https://bo.nalog.ru/search?query=3801146254"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="p-3.5 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 hover:border-amber-500/50 transition-all flex items-center justify-between group cursor-pointer"
+                  >
+                    <div className="space-y-0.5">
+                      <div className="font-bold text-white group-hover:text-amber-400 flex items-center gap-1.5">
+                        <span>ФНС ГИР БО (bo.nalog.ru)</span>
+                        <ExternalLink className="w-3 h-3 text-slate-500 group-hover:text-amber-400" />
+                      </div>
+                      <p className="text-[11px] text-slate-400">Официальная финансовая отчетность ООО «СНК»</p>
+                    </div>
+                    <span className="px-2 py-1 rounded bg-emerald-500/10 text-emerald-400 font-mono text-[10px] font-bold">
+                      Баланс ФНС
+                    </span>
+                  </a>
+
+                  {/* 6. Картотека арбитражных дел РФ */}
+                  <a
+                    href="https://kad.arbitr.ru/"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="p-3.5 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 hover:border-amber-500/50 transition-all flex items-center justify-between group cursor-pointer"
+                  >
+                    <div className="space-y-0.5">
+                      <div className="font-bold text-white group-hover:text-amber-400 flex items-center gap-1.5">
+                        <span>Картотека арбитража (kad.arbitr.ru)</span>
+                        <ExternalLink className="w-3 h-3 text-slate-500 group-hover:text-amber-400" />
+                      </div>
+                      <p className="text-[11px] text-slate-400">Проверка судебной истории (ИНН 3801146254)</p>
+                    </div>
+                    <span className="px-2 py-1 rounded bg-amber-500/10 text-amber-400 font-mono text-[10px] font-bold">
+                      Арбитраж РФ
                     </span>
                   </a>
 

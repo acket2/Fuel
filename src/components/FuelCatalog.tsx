@@ -37,19 +37,19 @@ export const FuelCatalog: React.FC<FuelCatalogProps> = ({
         <div className="text-center max-w-3xl mx-auto mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-800 dark:text-amber-400 text-xs font-semibold uppercase tracking-wider mb-3">
             <Fuel className="w-3.5 h-3.5" />
-            Каталог дизельного топлива Евро-5
+            Каталог дизельного топлива Класс 5 (Евро-5)
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-950 dark:text-white tracking-tight">
-            Сорта дизельного топлива высшего качества
+            3 сорта дизельного топлива Класс 5
           </h2>
           <p className="text-slate-600 dark:text-slate-400 text-sm sm:text-base mt-2">
-            Прямой налив с нефтеперерабатывающих заводов Сибири (АО «АНХК» и партнёрские НПЗ). 
-            Каждая партия сопровождается официальным паспортом качества и арбитражной пробой.
+            Летнее, Межсезонное и Зимнее топливо высшего экологического стандарта Класс 5 (К5 / Евро-5) по ГОСТ 32511-2013. 
+            Прямой налив с нефтеперерабатывающих заводов Сибири (АО «АНХК» и партнёрские НПЗ) с паспортом качества.
           </p>
         </div>
 
-        {/* Diesel Fuel Cards Grid - STRICTLY WITHOUT STATIC PRICE TAGS */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Diesel Fuel Cards Grid - 3 Columns for 3 Types */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {DIESEL_FUEL_PRODUCTS.map((fuel) => {
             const isSelected = selectedFuel.id === fuel.id;
             return (

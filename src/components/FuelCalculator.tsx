@@ -93,33 +93,29 @@ export const FuelCalculator: React.FC<FuelCalculatorProps> = ({
       return {
         type: 'Малый бензовоз-вездеход (5 - 8 м³)',
         sections: 2,
-        hose: 'Шланг 30-40 м с насосом',
-        deliveryTime: `${selectedLocation.minDeliveryHours} ч`
+        hose: 'Шланг 30-40 м с насосом'
       };
     } else if (volumeInLiters <= 18000) {
       return {
         type: 'Среднетоннажная автоцистерна (10 - 18 м³)',
         sections: 3,
-        hose: 'Высокопроизводительный насос (350 л/мин)',
-        deliveryTime: `${selectedLocation.minDeliveryHours} ч`
+        hose: 'Высокопроизводительный насос (350 л/мин)'
       };
     } else if (volumeInLiters <= 42000) {
       return {
         type: 'Магистральный автопоезд (30 - 42 м³)',
         sections: 4,
-        hose: 'Донные клапаны, термоизолированная цистерна',
-        deliveryTime: `${Math.max(selectedLocation.minDeliveryHours, 4)} ч`
+        hose: 'Донные клапаны, термоизолированная цистерна'
       };
     } else {
       const trainCars = Math.ceil(volumeInTons / 60);
       return {
         type: `Крупнооптовая партия (${trainCars} Ж/Д цистерн по 60 т или колонна автопоездов)`,
         sections: trainCars * 4,
-        hose: 'Прямая отгрузка с завода-изготовителя',
-        deliveryTime: 'По графику согласования'
+        hose: 'Прямая отгрузка с завода-изготовителя'
       };
     }
-  }, [volumeInLiters, volumeInTons, selectedLocation]);
+  }, [volumeInLiters, volumeInTons]);
 
   // Volume discount logic for interactive benchmark
   const discountPerLiter = useMemo(() => {
@@ -171,8 +167,7 @@ export const FuelCalculator: React.FC<FuelCalculatorProps> = ({
       estimatedCostInSelectedCurrency: totalCostInSelectedCurrency,
       estimatedCostRub: totalCostRub,
       truckType: truckSpecs.type,
-      truckSections: truckSpecs.sections,
-      estimatedDeliveryTime: truckSpecs.deliveryTime
+      truckSections: truckSpecs.sections
     };
     onOpenOrderModalWithCalc(calcResult);
   };
@@ -288,10 +283,10 @@ export const FuelCalculator: React.FC<FuelCalculatorProps> = ({
               <div className="space-y-3 pt-2 border-t border-slate-200 dark:border-slate-800">
                 <label className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-2">
                   <Layers className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-                  <span>2. Сорт дизельного топлива (ГОСТ Евро-5):</span>
+                  <span>2. Сорт дизельного топлива Класс 5 (ГОСТ 32511-2013):</span>
                 </label>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                   {DIESEL_FUEL_PRODUCTS.map((fuel) => {
                     const isSelected = fuel.id === selectedFuel.id;
                     return (
@@ -306,12 +301,12 @@ export const FuelCalculator: React.FC<FuelCalculatorProps> = ({
                         }`}
                       >
                         <div className="flex items-center justify-between">
-                          <span className="font-bold text-sm text-slate-950 dark:text-white">{fuel.shortName}</span>
-                          <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-amber-700 dark:text-amber-400 font-bold">
+                          <span className="font-bold text-xs text-slate-950 dark:text-white">{fuel.shortName}</span>
+                          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-amber-700 dark:text-amber-400 font-bold whitespace-nowrap">
                             {fuel.minTemp}
                           </span>
                         </div>
-                        <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-1">
+                        <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-1">
                           {fuel.grade}
                         </div>
                       </button>
@@ -366,7 +361,7 @@ export const FuelCalculator: React.FC<FuelCalculatorProps> = ({
                       >
                         <div className="text-xs font-semibold">{loc.name}</div>
                         <div className="text-[10px] text-slate-500 dark:text-slate-400 font-mono mt-0.5">
-                          ~{loc.distanceKm} км • {loc.minDeliveryHours}ч
+                          ~{loc.distanceKm} км
                         </div>
                       </button>
                     );
@@ -464,7 +459,7 @@ export const FuelCalculator: React.FC<FuelCalculatorProps> = ({
                   </div>
                   <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 pt-1 border-t border-slate-200 dark:border-slate-800/60">
                     <span>Изолированных секций: <strong className="text-slate-900 dark:text-white">{truckSpecs.sections}</strong></span>
-                    <span>Подача: <strong className="text-emerald-700 dark:text-emerald-400 font-semibold">{truckSpecs.deliveryTime}</strong></span>
+                    <span>Хаб: <strong className="text-amber-700 dark:text-amber-400 font-semibold">{selectedLocation.depotHub}</strong></span>
                   </div>
                 </div>
               </div>

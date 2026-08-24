@@ -3,7 +3,6 @@ import {
   MapPin, 
   Navigation, 
   Truck, 
-  Clock, 
   CheckCircle2, 
   ShieldCheck, 
   ArrowRight,
@@ -70,7 +69,7 @@ export const RegionsCoverageSection: React.FC<RegionsCoverageProps> = ({
                 <div className="flex items-center justify-between mb-2">
                   <MapPin className={`w-4 h-4 ${isTab ? 'text-amber-600 dark:text-amber-400' : 'text-slate-400 dark:text-slate-500'}`} />
                   <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-white dark:bg-slate-950 text-amber-800 dark:text-amber-400 border border-slate-200 dark:border-slate-800">
-                    {reg.deliveryTimeRange}
+                    Спецпарк СНК
                   </span>
                 </div>
                 <div className="font-bold text-sm sm:text-base text-slate-950 dark:text-white">{reg.name}</div>
@@ -128,7 +127,7 @@ export const RegionsCoverageSection: React.FC<RegionsCoverageProps> = ({
             {/* Cities in Region Grid (7 cols) */}
             <div className="lg:col-span-7 space-y-3">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 block">
-                Ключевые пункты доставки и расчётное время подачи:
+                Ключевые пункты доставки и логистические хабы:
               </span>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-[380px] overflow-y-auto pr-1">
@@ -145,14 +144,13 @@ export const RegionsCoverageSection: React.FC<RegionsCoverageProps> = ({
                       <span className="font-bold text-xs sm:text-sm text-slate-950 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
                         {city.name}
                       </span>
-                      <span className="text-[10px] font-mono text-emerald-700 dark:text-emerald-400 flex items-center gap-1 font-semibold">
-                        <Clock className="w-3 h-3" />
-                        от {city.minDeliveryHours} ч
+                      <span className="text-[10px] font-mono text-amber-700 dark:text-amber-400 flex items-center gap-1 font-semibold">
+                        ~{city.distanceKm} км
                       </span>
                     </div>
                     
                     <div className="text-[11px] text-slate-500 dark:text-slate-400">
-                      Дистанция: ~{city.distanceKm} км • {city.popularVolume}
+                      Партии: {city.popularVolume}
                     </div>
 
                     <div className="text-[10px] text-amber-700 dark:text-amber-400/90 font-mono mt-2 flex items-center justify-between border-t border-slate-200 dark:border-slate-800/60 pt-1.5 font-semibold">
