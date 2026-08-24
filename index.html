@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Основные SEO мета-теги -->
+    <title>ООО «СНК» | Поставки дизельного топлива Евро-5 в Иркутской, Амурской областях, Забайкалье и Бурятии</title>
+    <meta name="description" content="Компания ООО «СНК» (Сибирская Нефтяная Компания). ИНН: 3801146254. Осуществляем доставку дизельного топлива Евро-5 в Иркутской, Амурской областях, Забайкальском крае и Бурятском АО. Безналичный расчёт." />
+    <meta name="keywords" content="купить топливо в Иркутской области, дизельное топливо Амурская область, доставка ДТ Забайкальский край, дизтопливо Бурятия, ООО СНК Сибирская нефтяная компания, ИНН 3801146254, ДТ Евро-5 оптом, солярка оптом Чита Благовещенск Иркутск Улан-Удэ" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    
+    <!-- Региональная привязка -->
+    <meta name="geo.region" content="RU-IRK, RU-AMU, RU-ZAB, RU-BU" />
+    <meta name="geo.placename" content="Иркутск, Ангарск, Благовещенск, Чита, Улан-Удэ" />
+    
+    <!-- Open Graph / Соцсети -->
+    <meta property="og:type" content="business.business" />
+    <meta property="og:title" content="ООО «СНК» (Сибирская Нефтяная Компания) — Поставки дизельного топлива Евро-5" />
+    <meta property="og:description" content="Доставка дизельного топлива в Иркутской, Амурской областях, Забайкальском крае и Бурятском АО. ИНН 3801146254. Оплата — безнал." />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:site_name" content="ООО «СНК» — Сибирская Нефтяная Компания" />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="ООО «СНК» | Сибирская Нефтяная Компания" />
+    <meta name="twitter:description" content="Поставки дизельного топлива Евро-5 в 4 регионах Сибири и ДВ. ИНН: 3801146254." />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+
+    <!-- Pre-render Theme script to avoid flash -->
+    <script>
+      (function() {
+        try {
+          var saved = localStorage.getItem('snk_theme');
+          var theme = (saved === 'light' || saved === 'dark') ? saved : 'light';
+          document.documentElement.classList.remove('light', 'dark');
+          document.documentElement.classList.add(theme);
+        } catch (e) {}
+      })();
+    </script>
+
+    <!-- Микроразметка Schema.org для ТОП-5 в поисковиках -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "ООО «СНК»",
+      "alternateName": "Сибирская Нефтяная Компания",
+      "description": "Поставки и транспортировка дизельного топлива Евро-5 в Иркутской области, Амурской области, Забайкальском крае и Республике Бурятия.",
+      "taxID": "3801146254",
+      "telephone": ["+79041480038", "+79834149769"],
+      "areaServed": [
+        "Иркутская область",
+        "Амурская область",
+        "Забайкальский край",
+        "Республика Бурятия"
+      ],
+      "address": {
+        "@type": "PostalAddress",
+        "addressRegion": "Иркутская область",
+        "addressCountry": "RU"
+      }
+    }
+    </script>
+  </head>
+  <body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased selection:bg-amber-500 selection:text-slate-950 font-sans transition-colors duration-200">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

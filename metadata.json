@@ -1,0 +1,6 @@
+{
+  "name": "ООО СНК | Сибирская Нефтяная Компания",
+  "description": "Поставки дизельного топлива в Иркутской, Амурской областях, Забайкальском крае и Республике Бурятия. ИНН: 3801146254.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
