@@ -43,6 +43,7 @@ import {
   verifyAdminPassword, 
   registerOrUpdateAdmin, 
   sendLeadToTelegram, 
+  sendLeadToEmail,
   TelegramConfig, 
   EmailConfig 
 } from '../utils/telegramNotify';
@@ -87,8 +88,10 @@ export const AdminPanelModal: React.FC<AdminPanelModalProps> = ({
   const [isTestingTg, setIsTestingTg] = useState(false);
 
   const [adminEmail, setAdminEmail] = useState('');
+  const [formspreeUrl, setFormspreeUrl] = useState('https://formspree.io/f/myegqygq');
   const [emailEnabled, setEmailEnabled] = useState(true);
   const [emailTestStatus, setEmailTestStatus] = useState<{ success?: boolean; message?: string } | null>(null);
+  const [isTestingEmail, setIsTestingEmail] = useState(false);
 
   const [saveSuccessMsg, setSaveSuccessMsg] = useState('');
 
@@ -122,6 +125,7 @@ export const AdminPanelModal: React.FC<AdminPanelModalProps> = ({
 
     const em = getEmailConfig();
     setAdminEmail(em.adminEmail);
+    setFormspreeUrl(em.formspreeUrl || 'https://formspree.io/f/myegqygq');
     setEmailEnabled(em.isEnabled);
   };
 
@@ -245,22 +249,51 @@ export const AdminPanelModal: React.FC<AdminPanelModalProps> = ({
     e.preventDefault();
     const config: EmailConfig = {
       adminEmail: adminEmail.trim(),
+      formspreeUrl: formspreeUrl.trim() || 'https://formspree.io/f/myegqygq',
       isEnabled: emailEnabled
     };
     saveEmailConfig(config);
-    setSaveSuccessMsg('Настройки Email успешно сохранены!');
+    setSaveSuccessMsg('Настройки Email (Formspree) успешно сохранены!');
     setTimeout(() => setSaveSuccessMsg(''), 3000);
   };
 
-  const handleTestEmail = () => {
-    if (!adminEmail.trim()) {
-      setEmailTestStatus({ success: false, message: 'Укажите email адрес' });
+  const handleTestEmail = async () => {
+    const url = formspreeUrl.trim();
+    if (!url) {
+      setEmailTestStatus({ success: false, message: 'Укажите ссылку на Formspree (например, https://formspree.io/f/myegqygq)' });
       return;
     }
-    setEmailTestStatus({
-      success: true,
-      message: `Уведомления будут дублироваться на ${adminEmail.trim()}`
+
+    setIsTestingEmail(true);
+    setEmailTestStatus(null);
+
+    const testLead: OrderLeadData = {
+      id: 'TEST-MAIL-' + Math.floor(1000 + Math.random() * 9000),
+      createdAt: new Date().toLocaleString('ru-RU'),
+      phone: '+7 (904) 148-00-38',
+      regionName: 'Иркутская область',
+      destination: 'г. Иркутск (Тестовая проверка Formspree почты)',
+      volumeM3: 20,
+      volumeLiters: 20000,
+      volumeTons: 16.8,
+      selectedUnit: 'm3',
+      fuelName: 'ДТ Зимнее (Класс 5 / Евро-5)',
+      fullName: 'Администратор СНК',
+      companyName: 'ООО «СНК»',
+      email: adminEmail.trim() || 'Danilgolenko2008@gmail.com',
+      paymentType: 'cashless_vat',
+      needHosePump: true,
+      comment: 'Тестовое письмо для проверки интеграции Formspree и почты.'
+    };
+
+    const res = await sendLeadToEmail(testLead, {
+      adminEmail: adminEmail.trim() || 'Danilgolenko2008@gmail.com',
+      formspreeUrl: url,
+      isEnabled: true
     });
+
+    setIsTestingEmail(false);
+    setEmailTestStatus(res);
   };
 
   const handleCopy = (text: string, id: string) => {
@@ -968,22 +1001,40 @@ export const AdminPanelModal: React.FC<AdminPanelModalProps> = ({
                   <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 space-y-2">
                     <div className="flex items-center gap-2 font-bold text-emerald-800 dark:text-emerald-300 text-sm">
                       <Mail className="w-4 h-4 text-emerald-500" />
-                      <span>Дублирование заявок на ваш Email</span>
+                      <span>Мгновенная доставка заявок на Email через Formspree</span>
                     </div>
                     <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                      Укажите ваш рабочий или личный почтовый ящик. Все заявки будут автоматически дублироваться на этот адрес с полной спецификацией и контактами клиента.
+                      Все новые заявки с сайта автоматически форматируются и отправляются на ваш почтовый ящик. Вы можете в любой момент изменить ссылку Formspree эндпоинта прямо здесь — всё сохраняется и работает автоматически.
                     </p>
                   </div>
 
                   <form onSubmit={handleSaveEmail} className="space-y-4 text-xs">
                     <div>
                       <label className="block font-bold text-slate-800 dark:text-slate-200 mb-1">
-                        Адрес электронной почты для приёма заявок:
+                        1. Ссылка эндпоинта Formspree (Endpoint URL):
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="url"
+                          required
+                          placeholder="https://formspree.io/f/myegqygq"
+                          value={formspreeUrl}
+                          onChange={(e) => setFormspreeUrl(e.target.value)}
+                          className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl p-3 text-slate-950 dark:text-white font-mono focus:border-amber-500 focus:outline-none"
+                        />
+                      </div>
+                      <span className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 block">
+                        Текущий рабочий эндпоинт: <code className="text-emerald-600 dark:text-emerald-400 font-bold">https://formspree.io/f/myegqygq</code>. При необходимости вы можете вставить сюда любую другую форму Formspree.
+                      </span>
+                    </div>
+
+                    <div>
+                      <label className="block font-bold text-slate-800 dark:text-slate-200 mb-1">
+                        2. Ваш адрес электронной почты (для справки и дублирования):
                       </label>
                       <input
                         type="email"
-                        required
-                        placeholder="snab@snk-oil.ru или ваша личная почта"
+                        placeholder="Danilgolenko2008@gmail.com или корпоративная почта"
                         value={adminEmail}
                         onChange={(e) => setAdminEmail(e.target.value)}
                         className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl p-3 text-slate-950 dark:text-white font-mono focus:border-amber-500 focus:outline-none"
@@ -998,7 +1049,7 @@ export const AdminPanelModal: React.FC<AdminPanelModalProps> = ({
                         className="w-4 h-4 rounded text-amber-500 focus:ring-amber-500"
                       />
                       <span className="font-semibold text-slate-800 dark:text-slate-200">
-                        Включить дублирование уведомлений на указанный Email
+                        Включить автоматическую отправку уведомлений на Email через Formspree
                       </span>
                     </label>
 
@@ -1018,16 +1069,17 @@ export const AdminPanelModal: React.FC<AdminPanelModalProps> = ({
                         type="submit"
                         className="w-full sm:w-auto px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold shadow-md cursor-pointer transition-all"
                       >
-                        Сохранить настройки Email
+                        Сохранить настройки Formspree
                       </button>
 
                       <button
                         type="button"
                         onClick={handleTestEmail}
-                        className="w-full sm:w-auto px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold flex items-center justify-center gap-2 cursor-pointer transition-all"
+                        disabled={isTestingEmail || !formspreeUrl}
+                        className="w-full sm:w-auto px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold flex items-center justify-center gap-2 disabled:opacity-40 cursor-pointer transition-all"
                       >
                         <Mail className="w-3.5 h-3.5" />
-                        <span>Проверить почту</span>
+                        <span>{isTestingEmail ? 'Отправка теста на почту...' : 'Отправить тестовое письмо'}</span>
                       </button>
                     </div>
                   </form>

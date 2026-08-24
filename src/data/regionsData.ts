@@ -83,7 +83,7 @@ export const DELIVERY_LOCATIONS: DeliveryLocation[] = [
     regionId: 'irkutsk',
     regionName: 'Иркутская область',
     distanceKm: 1450,
-    popularVolume: 'Партии от 100 т (ДТ Арктика)',
+    popularVolume: 'Партии от 100 т (ДТ Зимнее К5)',
     depotHub: 'Северный тракт'
   },
   {

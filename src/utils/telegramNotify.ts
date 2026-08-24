@@ -12,6 +12,7 @@ export interface TelegramConfig {
 
 export interface EmailConfig {
   adminEmail: string;
+  formspreeUrl: string;
   isEnabled: boolean;
 }
 
@@ -52,19 +53,27 @@ export function saveTelegramConfig(config: TelegramConfig) {
   }
 }
 
+export const DEFAULT_FORMSPREE_URL = 'https://formspree.io/f/myegqygq';
+
 // --- EMAIL CONFIG ---
 export function getEmailConfig(): EmailConfig {
   try {
     const saved = localStorage.getItem(EMAIL_STORAGE_KEY);
     if (saved) {
-      return JSON.parse(saved);
+      const parsed = JSON.parse(saved);
+      return {
+        adminEmail: parsed.adminEmail || '',
+        formspreeUrl: parsed.formspreeUrl !== undefined ? parsed.formspreeUrl : DEFAULT_FORMSPREE_URL,
+        isEnabled: parsed.isEnabled !== undefined ? parsed.isEnabled : true
+      };
     }
   } catch (e) {
     console.error('Failed to read email config', e);
   }
   return {
-    adminEmail: '',
-    isEnabled: false
+    adminEmail: 'Danilgolenko2008@gmail.com',
+    formspreeUrl: DEFAULT_FORMSPREE_URL,
+    isEnabled: true
   };
 }
 
@@ -285,7 +294,7 @@ export async function sendLeadToTelegram(
 }
 
 /**
- * Send email notification to Admin Email
+ * Send email notification to Admin via Formspree Endpoint
  */
 export async function sendLeadToEmail(
   lead: OrderLeadData,
@@ -293,44 +302,78 @@ export async function sendLeadToEmail(
 ): Promise<{ success: boolean; message: string }> {
   const emailConfig = customConfig || getEmailConfig();
 
-  if (!emailConfig.adminEmail || !emailConfig.isEnabled) {
+  if (!emailConfig.isEnabled) {
     return {
       success: true,
-      message: 'Email-уведомление не настроено (укажите email в админ-панели для дублирования).'
+      message: 'Email-уведомление отключено в настройках.'
     };
   }
 
-  try {
-    // Attempt dispatch via mail service webhook or simulated server relay
-    const subject = encodeURIComponent(`Новая заявка № ${lead.id} на поставку топлива (${lead.volumeM3} м³)`);
-    const bodyText = `НОВАЯ ЗАЯВКА НА ТОПЛИВО № ${lead.id}
-----------------------------------------
-Номер телефона: ${lead.phone}
-Контактное лицо: ${lead.fullName || 'Не указано'}
-Организация: ${lead.companyName || 'Не указано'}
-Email клиента: ${lead.email || 'Не указан'}
+  const endpoint = (emailConfig.formspreeUrl || DEFAULT_FORMSPREE_URL).trim();
 
-Регион доставки: ${lead.regionName}
-Место назначения: ${lead.destination}
-Объем партии: ${lead.volumeM3} м3 (~${lead.volumeLiters} л / ~${lead.volumeTons} т)
-Сорт топлива: ${lead.fuelName}
-Форма оплаты: ${lead.paymentType}
-Насос и рукав: ${lead.needHosePump ? 'Да (до 40м)' : 'Нет'}
-Комментарий: ${lead.comment || 'Нет'}
-Дата и время: ${lead.createdAt}
-----------------------------------------
-ООО «СНК» • ИНН 3801146254`;
-
-    // Try posting to dispatch endpoint if available, fallback gracefully
+  if (!endpoint) {
     return {
-      success: true,
-      message: `Копия заявки отправлена на ${emailConfig.adminEmail}`
+      success: false,
+      message: 'Укажите ссылку на форму Formspree в панели администратора.'
     };
-  } catch (e) {
+  }
+
+  const paymentLabels: Record<string, string> = {
+    cashless_vat: 'Безналичный расчёт с НДС (20%)',
+    cashless_no_vat: 'Безналичный расчёт без НДС (УСН/ИП)',
+    consultation: 'Уточнить по телефону'
+  };
+
+  try {
+    const payload = {
+      _subject: `Новая заявка на топливо № ${lead.id} (${lead.volumeM3} м³) — ООО «СНК»`,
+      order_id: lead.id,
+      date_time: lead.createdAt,
+      phone: lead.phone,
+      client_name: lead.fullName || 'Не указано',
+      company_name: lead.companyName || 'Не указано',
+      client_email: lead.email || 'Не указан',
+      delivery_region: lead.regionName,
+      destination_address: lead.destination,
+      fuel_grade: lead.fuelName,
+      volume_m3: `${lead.volumeM3} м³`,
+      volume_liters: `${lead.volumeLiters.toLocaleString('ru-RU')} л`,
+      volume_tons: `${lead.volumeTons.toFixed(2)} т`,
+      payment_type: paymentLabels[lead.paymentType] || lead.paymentType,
+      need_hose_pump: lead.needHosePump ? 'Да, насос и рукав до 40м требуются' : 'Нет',
+      client_comment: lead.comment || 'Без комментария',
+      target_admin_email: emailConfig.adminEmail || 'Danilgolenko2008@gmail.com',
+      company: 'ООО «СНК» (Сибирская Нефтяная Компания)',
+      inn: '3801146254'
+    };
+
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (response.ok) {
+      return {
+        success: true,
+        message: 'Заявка успешно отправлена на вашу почту через Formspree!'
+      };
+    } else {
+      const errData = await response.json().catch(() => ({}));
+      console.warn('Formspree dispatch error:', errData);
+      return {
+        success: false,
+        message: `Ошибка Formspree: ${errData.error || 'Проверьте ссылку эндпоинта'}`
+      };
+    }
+  } catch (e: any) {
     console.error('Email dispatch error:', e);
     return {
       success: false,
-      message: 'Не удалось отправить email-дубликат.'
+      message: 'Сетевая ошибка при отправке на Formspree.'
     };
   }
 }
