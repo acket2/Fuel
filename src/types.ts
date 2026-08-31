@@ -75,5 +75,6 @@ export interface OrderLeadData {
   email: string;
   paymentType: 'cashless_vat' | 'cashless_no_vat' | 'consultation';
   comment: string;
+  needHosePump?: boolean;
   status?: OrderStatus;
 }
