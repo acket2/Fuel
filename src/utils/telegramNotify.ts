@@ -325,29 +325,42 @@ export async function sendLeadToEmail(
   };
 
   try {
-    const payload = {
-      _subject: `Новая заявка на топливо № ${lead.id} (${lead.volumeM3} м³) — ООО «СНК»`,
-      order_id: lead.id,
-      date_time: lead.createdAt,
+    const messageText = `Детали заявки:
+• Телефон: ${lead.phone}
+• Контактное лицо: ${lead.fullName || 'Не указано'}
+• Организация: ${lead.companyName || 'Не указано'}
+• Сорт топлива: ${lead.fuelName}
+• Объём партии: ${lead.volumeM3} м³ (~${lead.volumeLiters.toLocaleString('ru-RU')} л / ~${lead.volumeTons.toFixed(2)} т)
+• Регион доставки: ${lead.regionName}
+• Пункт назначения: ${lead.destination}
+• Оплата: ${paymentLabels[lead.paymentType] || lead.paymentType}
+• Комментарий: ${lead.comment || 'Нет'}
+• Номер заявки: № ${lead.id}
+• Дата: ${lead.createdAt}`;
+
+    const clientEmail = (lead.email && lead.email.includes('@')) ? lead.email.trim() : (emailConfig.adminEmail || 'client@snk-oil.ru');
+
+    const payload: Record<string, any> = {
+      _subject: `Заявка на ДТ № ${lead.id} (${lead.volumeM3} м³) — ${lead.regionName}`,
+      name: lead.fullName || lead.companyName || 'Заказчик топлива (СНК)',
+      email: clientEmail,
       phone: lead.phone,
-      client_name: lead.fullName || 'Не указано',
-      company_name: lead.companyName || 'Не указано',
-      client_email: lead.email || 'Не указан',
-      delivery_region: lead.regionName,
-      destination_address: lead.destination,
+      message: messageText,
+      destination: lead.destination,
+      region: lead.regionName,
       fuel_grade: lead.fuelName,
-      volume_m3: `${lead.volumeM3} м³`,
-      volume_liters: `${lead.volumeLiters.toLocaleString('ru-RU')} л`,
-      volume_tons: `${lead.volumeTons.toFixed(2)} т`,
-      payment_type: paymentLabels[lead.paymentType] || lead.paymentType,
-      need_hose_pump: lead.needHosePump ? 'Да, насос и рукав до 40м требуются' : 'Нет',
-      client_comment: lead.comment || 'Без комментария',
-      target_admin_email: emailConfig.adminEmail || 'Danilgolenko2008@gmail.com',
-      company: 'ООО «СНК» (Сибирская Нефтяная Компания)',
-      inn: '3801146254'
+      volume: `${lead.volumeM3} м³`,
+      order_id: lead.id,
+      _gotcha: '', // Formspree honeypot field - must be empty to pass Formspree anti-spam
+      _captcha: 'false'
     };
 
-    const response = await fetch(endpoint, {
+    let targetUrl = endpoint;
+    if (targetUrl.includes('formsubmit.co') && !targetUrl.includes('/ajax/')) {
+      targetUrl = targetUrl.replace('formsubmit.co/', 'formsubmit.co/ajax/');
+    }
+
+    const response = await fetch(targetUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -359,21 +372,21 @@ export async function sendLeadToEmail(
     if (response.ok) {
       return {
         success: true,
-        message: 'Заявка успешно отправлена на вашу почту через Formspree!'
+        message: 'Заявка успешно отправлена на почту!'
       };
     } else {
       const errData = await response.json().catch(() => ({}));
-      console.warn('Formspree dispatch error:', errData);
+      console.warn('Formspree/Email dispatch error:', errData);
       return {
         success: false,
-        message: `Ошибка Formspree: ${errData.error || 'Проверьте ссылку эндпоинта'}`
+        message: `Ошибка отправки: ${errData.error || errData.message || 'Проверьте эндпоинт'}`
       };
     }
   } catch (e: any) {
     console.error('Email dispatch error:', e);
     return {
       success: false,
-      message: 'Сетевая ошибка при отправке на Formspree.'
+      message: 'Сетевая ошибка при отправке на почтовый сервис.'
     };
   }
 }

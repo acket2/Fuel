@@ -41,7 +41,6 @@ export const OrderSection: React.FC<OrderSectionProps> = ({
   const [companyName, setCompanyName] = useState('');
   const [email, setEmail] = useState('');
   const [paymentType, setPaymentType] = useState<'cashless_vat' | 'cashless_no_vat' | 'consultation'>('cashless_vat');
-  const [needHosePump, setNeedHosePump] = useState(true);
   const [comment, setComment] = useState('');
 
   // Submission State
@@ -101,7 +100,6 @@ export const OrderSection: React.FC<OrderSectionProps> = ({
       companyName: companyName.trim(),
       email: email.trim(),
       paymentType: paymentType,
-      needHosePump: needHosePump,
       comment: comment.trim()
     };
 
@@ -561,19 +559,6 @@ export const OrderSection: React.FC<OrderSectionProps> = ({
                     <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Индивидуальный график платежей / отсрочка</div>
                   </button>
                 </div>
-
-                {/* Чекбокс сливного насоса */}
-                <label className="flex items-center gap-3 p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 cursor-pointer hover:border-slate-300 dark:hover:border-slate-700 transition-colors">
-                  <input
-                    type="checkbox"
-                    checked={needHosePump}
-                    onChange={(e) => setNeedHosePump(e.target.checked)}
-                    className="w-4 h-4 rounded border-slate-300 dark:border-slate-700 text-amber-500 focus:ring-amber-500"
-                  />
-                  <span className="text-xs">
-                    <strong>Требуется насос и длинный рукав (до 40 метров)</strong> для перекачки в ёмкости, генераторы или спецтехнику на объекте
-                  </span>
-                </label>
 
                 {/* Комментарий */}
                 <div>

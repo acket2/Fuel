@@ -18,10 +18,9 @@ import {
 import { RegionInfo } from '../types';
 import { REGIONS_LIST } from '../data/regionsData';
 import { useTheme } from '../context/ThemeContext';
+import { Link, useLocation } from 'react-router-dom';
 
 interface HeaderProps {
-  selectedRegion: RegionInfo;
-  onSelectRegion: (region: RegionInfo) => void;
   onOpenOrderModal: () => void;
   onScrollToCalculator: () => void;
   onOpenTelegramSettings?: () => void;
@@ -31,8 +30,6 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({
-  selectedRegion,
-  onSelectRegion,
   onOpenOrderModal,
   onScrollToCalculator,
   onOpenVerificationModal,
@@ -42,6 +39,8 @@ export const Header: React.FC<HeaderProps> = ({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [regionDropdownOpen, setRegionDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const location = useLocation();
+  const currentPath = location.pathname;
   const { theme, toggleTheme } = useTheme();
 
   const phone1 = '89041480038';
@@ -158,98 +157,25 @@ export const Header: React.FC<HeaderProps> = ({
           </a>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden xl:flex items-center gap-1 2xl:gap-2 text-[13px] font-semibold text-slate-700 dark:text-slate-300">
-            <a 
-              href="#calculator" 
-              onClick={(e) => {
-                e.preventDefault();
-                onScrollToCalculator();
-              }}
-              className="flex items-center gap-1.5 text-amber-700 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-300 font-bold px-3 py-2 rounded-xl hover:bg-amber-500/10 transition-colors whitespace-nowrap"
-            >
-              <Calculator className="w-4 h-4 shrink-0" />
-              <span>Калькулятор</span>
-            </a>
-
-            <a 
-              href="#catalog" 
-              className="px-3 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors whitespace-nowrap"
-            >
-              Сорта ДТ
-            </a>
-
-            <a 
-              href="#regions" 
-              className="px-3 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors whitespace-nowrap"
-            >
-              География
-            </a>
-
-            <a 
-              href="#payment" 
-              className="px-3 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors whitespace-nowrap"
-            >
-              Оплата
-            </a>
-
-            <a 
-              href="#about" 
-              className="px-3 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors whitespace-nowrap"
+          <nav className="hidden md:flex items-center gap-3 lg:gap-4 text-base font-medium text-slate-500 dark:text-slate-400">
+            <Link 
+              to="/" 
+              className={`px-4 py-2.5 rounded-xl transition-all whitespace-nowrap ${currentPath === '/' ? 'text-amber-600 dark:text-amber-500' : 'hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900'}`}
             >
               О компании
-            </a>
+            </Link>
 
-            <a 
-              href="#faq" 
-              className="px-3 py-2 rounded-xl hover:text-amber-600 dark:hover:text-amber-400 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors whitespace-nowrap"
+            <Link 
+              to="/order" 
+              className={`px-4 py-2.5 rounded-xl transition-all whitespace-nowrap ${currentPath === '/order' ? 'text-amber-600 dark:text-amber-500' : 'hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900'}`}
             >
-              Вопросы
-            </a>
+              Заявка
+            </Link>
           </nav>
 
           {/* Right Action Cluster */}
           <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
             
-            {/* Region Selector Dropdown (Desktop & Tablet) */}
-            <div className="relative hidden md:block" ref={dropdownRef}>
-              <button
-                type="button"
-                onClick={() => setRegionDropdownOpen(!regionDropdownOpen)}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 text-xs font-semibold hover:border-amber-500/50 transition-colors cursor-pointer whitespace-nowrap"
-                title="Выбрать регион доставки"
-              >
-                <MapPin className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
-                <span className="max-w-[130px] truncate">{selectedRegion.shortName}</span>
-                <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform ${regionDropdownOpen ? 'rotate-180' : ''}`} />
-              </button>
-
-              {regionDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl p-2 z-50 space-y-1 animate-in fade-in slide-in-from-top-1 duration-150">
-                  <div className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 px-2 py-1">
-                    Регион поставки топлива:
-                  </div>
-                  {REGIONS_LIST.map((reg) => (
-                    <button
-                      key={reg.id}
-                      type="button"
-                      onClick={() => {
-                        onSelectRegion(reg);
-                        setRegionDropdownOpen(false);
-                      }}
-                      className={`w-full text-left px-3 py-2 rounded-xl text-xs transition-colors flex items-center justify-between cursor-pointer ${
-                        selectedRegion.id === reg.id
-                          ? 'bg-amber-500/15 text-amber-900 dark:text-amber-300 font-bold border border-amber-500/30'
-                          : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
-                      }`}
-                    >
-                      <span className="font-semibold">{reg.name}</span>
-                      <span className="text-[10px] text-amber-700 dark:text-amber-400 font-mono font-bold">СНК</span>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-
             {/* Theme Toggle (Dark / Light) - Visible on tablet/desktop */}
             <button
               type="button"
@@ -375,34 +301,6 @@ export const Header: React.FC<HeaderProps> = ({
             </span>
           </button>
 
-          {/* Mobile Region Selector */}
-          <div className="space-y-1.5">
-            <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider px-1 flex items-center gap-1.5">
-              <MapPin className="w-3.5 h-3.5 text-amber-500" />
-              <span>Выберите ваш регион поставки:</span>
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              {REGIONS_LIST.map((reg) => (
-                <button
-                  key={reg.id}
-                  type="button"
-                  onClick={() => {
-                    onSelectRegion(reg);
-                    setMobileMenuOpen(false);
-                  }}
-                  className={`p-3 rounded-xl text-left text-xs font-semibold transition-colors cursor-pointer ${
-                    selectedRegion.id === reg.id
-                      ? 'bg-amber-500/20 text-amber-900 dark:text-amber-300 border border-amber-500/40 font-bold shadow-sm'
-                      : 'bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800'
-                  }`}
-                >
-                  <div className="font-bold truncate">{reg.shortName}</div>
-                  <div className="text-[10px] text-amber-700 dark:text-amber-400 font-mono mt-0.5">Спецпарк СНК</div>
-                </button>
-              ))}
-            </div>
-          </div>
-
           {/* Mobile Direct Phone Calls */}
           <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-2">
             <div className="text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wider font-bold">
@@ -427,53 +325,21 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
 
           {/* Mobile Nav Links */}
-          <div className="flex flex-col gap-1 pt-2 border-t border-slate-200 dark:border-slate-800 text-sm font-semibold">
-            <a
-              href="#calculator"
-              onClick={() => {
-                setMobileMenuOpen(false);
-                onScrollToCalculator();
-              }}
-              className="p-3 rounded-xl bg-amber-500/15 text-amber-900 dark:text-amber-300 flex items-center gap-2 font-bold"
-            >
-              <Calculator className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-              <span>Калькулятор объёма топлива</span>
-            </a>
-            <a
-              href="#catalog"
+          <div className="flex flex-col gap-2 pt-2 border-t border-slate-200 dark:border-slate-800 text-base font-medium text-slate-500 dark:text-slate-400">
+            <Link
+              to="/"
               onClick={() => setMobileMenuOpen(false)}
-              className="p-3 text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white"
-            >
-              Сорта дизельного топлива
-            </a>
-            <a
-              href="#regions"
-              onClick={() => setMobileMenuOpen(false)}
-              className="p-3 text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white"
-            >
-              География поставок
-            </a>
-            <a
-              href="#payment"
-              onClick={() => setMobileMenuOpen(false)}
-              className="p-3 text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white"
-            >
-              Оплата (Безналичный расчёт с НДС)
-            </a>
-            <a
-              href="#about"
-              onClick={() => setMobileMenuOpen(false)}
-              className="p-3 text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white"
+              className={`p-3 rounded-xl transition-colors ${currentPath === '/' ? 'text-amber-600 dark:text-amber-500' : 'hover:text-slate-900 dark:hover:text-slate-200'}`}
             >
               О компании
-            </a>
-            <a
-              href="#faq"
+            </Link>
+            <Link
+              to="/order"
               onClick={() => setMobileMenuOpen(false)}
-              className="p-3 text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white"
+              className={`p-3 rounded-xl transition-colors ${currentPath === '/order' ? 'text-amber-600 dark:text-amber-500' : 'hover:text-slate-900 dark:hover:text-slate-200'}`}
             >
-              Вопросы и ответы
-            </a>
+              Заявка
+            </Link>
           </div>
 
           <button
