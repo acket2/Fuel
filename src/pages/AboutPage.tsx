@@ -21,7 +21,7 @@ export default function AboutPage() {
     shortName: 'ООО «СНК»',
     inn: '3801146254',
     kpp: '380101001',
-    ogrn: '1183850027845',
+    ogrn: '1183850023950',
     okved: '46.71 — Торговля оптовая твердым, жидким и газообразным топливом и подобными продуктами',
     status: 'Действующее юридическое лицо',
     region: 'Иркутская область, г. Ангарск / г. Иркутск',
@@ -160,7 +160,7 @@ export default function AboutPage() {
                 </a>
                 
                 <a
-                  href="https://egrul.nalog.ru/"
+                  href="https://egrul.nalog.ru/index.html"
                   target="_blank"
                   rel="noreferrer noopener"
                   className="block p-4 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 hover:border-amber-500 transition-all group"
@@ -173,13 +173,13 @@ export default function AboutPage() {
                 </a>
                 
                 <a
-                  href="https://www.rusprofile.ru/search?query=3801146254"
+                  href="https://zachestnyibiznes.ru/search?query=3801146254"
                   target="_blank"
                   rel="noreferrer noopener"
                   className="block p-4 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 hover:border-amber-500 transition-all group"
                 >
                   <div className="font-bold text-slate-900 dark:text-white group-hover:text-amber-500 flex items-center justify-between">
-                    <span>Rusprofile.ru</span>
+                    <span>Законно и честно</span>
                     <ExternalLink className="w-4 h-4 text-slate-400" />
                   </div>
                   <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Аудит контрагента</p>

@@ -44,7 +44,7 @@ export const CompanyVerificationModal: React.FC<CompanyVerificationModalProps> =
     shortName: 'ООО «СНК»',
     inn: '3801146254',
     kpp: '380101001',
-    ogrn: '1183850027845',
+    ogrn: '1183850023950',
     okved: '46.71 — Торговля оптовая твердым, жидким и газообразным топливом и подобными продуктами',
     status: 'Действующее юридическое лицо',
     registrationDate: '2018 год',
@@ -287,7 +287,7 @@ export const CompanyVerificationModal: React.FC<CompanyVerificationModalProps> =
 
                   {/* 2. ЕГРЮЛ ФНС РФ */}
                   <a
-                    href="https://egrul.nalog.ru/"
+                    href="https://egrul.nalog.ru/index.html"
                     target="_blank"
                     rel="noreferrer noopener"
                     className="p-3.5 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 hover:border-amber-500/50 transition-all flex items-center justify-between group cursor-pointer"
@@ -306,7 +306,7 @@ export const CompanyVerificationModal: React.FC<CompanyVerificationModalProps> =
 
                   {/* 3. Checko */}
                   <a
-                    href="https://checko.ru/company/snk-1183850027845"
+                    href="https://checko.ru/company/snk-1183850023950"
                     target="_blank"
                     rel="noreferrer noopener"
                     className="p-3.5 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 hover:border-amber-500/50 transition-all flex items-center justify-between group cursor-pointer"
@@ -323,16 +323,16 @@ export const CompanyVerificationModal: React.FC<CompanyVerificationModalProps> =
                     </span>
                   </a>
 
-                  {/* 4. Rusprofile Search */}
+                  {/* 4. Законно и честно, поиск по ИНН */}
                   <a
-                    href="https://www.rusprofile.ru/search?query=3801146254"
+                    href="https://zachestnyibiznes.ru/search?query=3801146254"
                     target="_blank"
                     rel="noreferrer noopener"
                     className="p-3.5 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 hover:border-amber-500/50 transition-all flex items-center justify-between group cursor-pointer"
                   >
                     <div className="space-y-0.5">
                       <div className="font-bold text-white group-hover:text-amber-400 flex items-center gap-1.5">
-                        <span>Rusprofile.ru (ИНН 3801146254)</span>
+                        <span>Законно и честно (ИНН 3801146254)</span>
                         <ExternalLink className="w-3 h-3 text-slate-500 group-hover:text-amber-400" />
                       </div>
                       <p className="text-[11px] text-slate-400">Поиск в базе контрагентов по ИНН 3801146254</p>
@@ -344,7 +344,7 @@ export const CompanyVerificationModal: React.FC<CompanyVerificationModalProps> =
 
                   {/* 5. Государственный информационный ресурс бухгалтерской отчетности (ГИР БО) */}
                   <a
-                    href="https://bo.nalog.ru/search?query=3801146254"
+                    href="https://bo.nalog.gov.ru/search?query=3801146254"
                     target="_blank"
                     rel="noreferrer noopener"
                     className="p-3.5 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 hover:border-amber-500/50 transition-all flex items-center justify-between group cursor-pointer"
