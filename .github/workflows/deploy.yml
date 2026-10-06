@@ -32,6 +32,9 @@ jobs:
       - name: Build
         run: npx vite build
 
+      - name: Copy design mockups
+        run: cp -r mockups dist/mockups
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
