@@ -12,6 +12,21 @@ const onScroll = () => header.classList.toggle('is-solid', scrollY > innerHeight
 addEventListener('scroll', onScroll, { passive: true });
 onScroll();
 
+// Тема: тёмная по умолчанию, светлая по кнопке; выбор запоминается (начальная подстановка в <head>, чтобы не мигало)
+const themeBtn = document.getElementById('theme');
+const syncThemeBtn = () => {
+  const light = document.documentElement.dataset.theme === 'light';
+  themeBtn.setAttribute('aria-pressed', light);
+  themeBtn.setAttribute('aria-label', light ? 'Тёмная тема' : 'Светлая тема');
+};
+themeBtn.addEventListener('click', () => {
+  const light = document.documentElement.dataset.theme !== 'light';
+  if (light) document.documentElement.dataset.theme = 'light'; else delete document.documentElement.dataset.theme;
+  try { localStorage.setItem('snk-theme', light ? 'light' : 'dark'); } catch { /* приватный режим: просто не запомним */ }
+  syncThemeBtn();
+});
+syncThemeBtn();
+
 // ---------- Калькулятор: ₽/л = ₽/т × плотность ÷ 1000 ----------
 const num = (s) => parseFloat(String(s).replace(/\s/g, '').replace(',', '.'));
 const fmt = (n, d) => n.toLocaleString('ru-RU', { minimumFractionDigits: d, maximumFractionDigits: d });
