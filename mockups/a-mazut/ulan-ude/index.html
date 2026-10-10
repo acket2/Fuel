@@ -23,10 +23,10 @@
 <header class="top" id="top">
   <a class="logo rise" style="--d:300ms" href="../" aria-label="ООО «СНК», на главную">СНК</a>
   <nav class="nav rise" style="--d:420ms" aria-label="Основная навигация">
-    <a href="../#fuel">Топливо</a>
-    <a href="../#calc">Калькулятор</a>
+    <a href="#fuel">Топливо</a>
+    <a href="#calc">Калькулятор</a>
     <a href="../#regions">Регионы</a>
-    <a href="../#verify">Проверка</a>
+    <a href="#verify">Проверка</a>
     <a href="#order">Заявка</a>
     <a class="nav__tel" href="tel:89041480038">8 (904) 148-00-38</a>
     <button class="theme" id="theme" type="button" aria-label="Светлая тема" aria-pressed="false">
@@ -102,6 +102,37 @@
         <a href="tel:89041480038">8 (904) 148-00-38</a>, <a href="https://wa.me/79041480038" target="_blank" rel="noopener">WhatsApp</a>, <a href="https://t.me/+79041480038" target="_blank" rel="noopener">Telegram</a> или <a href="mailto:Worldbaikal@mail.ru">Worldbaikal@mail.ru</a></p>
     </section>
 
+    <section class="sec calc" id="calc">
+      <div class="sec__head">
+        <h2 class="rise">Переведём цену<br>из&nbsp;тонн в&nbsp;литры</h2>
+        <p class="lead rise" style="--d:100ms">Цена за&nbsp;литр зависит от&nbsp;плотности продукта. Введите цену за&nbsp;тонну и&nbsp;плотность из&nbsp;паспорта качества. Считает и&nbsp;в&nbsp;обратную сторону.</p>
+      </div>
+      <form class="conv rise" style="--d:150ms" id="conv" autocomplete="off" onsubmit="return false">
+        <label>Цена за&nbsp;тонну, ₽<input id="cTon" type="text" inputmode="decimal" value="100 000"></label>
+        <label>Плотность, кг/л<input id="cDen" type="text" inputmode="decimal" value="0,850"></label>
+        <label>Цена за&nbsp;литр, ₽<input id="cLit" type="text" inputmode="decimal" value="85,00"></label>
+      </form>
+    </section>
+
+    <section class="sec sec--alt verify" id="verify">
+      <div class="sec__head">
+        <h2 class="rise">Проверьте компанию<br>в&nbsp;открытых реестрах</h2>
+        <p class="lead rise" style="--d:100ms">ИНН&nbsp;3801146254, ОГРН&nbsp;1183850023950, КПП&nbsp;380101001. Каждая ссылка ведёт на&nbsp;сервис, где компания проверяется по&nbsp;этим данным.</p>
+      </div>
+      <ul class="links">
+        <li class="rise"><a href="https://pb.nalog.ru/search.html?mode=quick&amp;query=3801146254" target="_blank" rel="noopener noreferrer"><span>ФНС: «Прозрачный бизнес»</span><small>pb.nalog.ru, поиск по&nbsp;ИНН</small><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></li>
+        <li class="rise" style="--d:50ms"><a href="https://egrul.nalog.ru/index.html" target="_blank" rel="noopener noreferrer"><span>ЕГРЮЛ: выписка с&nbsp;ЭЦП</span><small>egrul.nalog.ru, введите ИНН в&nbsp;поиск</small><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></li>
+        <li class="rise" style="--d:100ms"><a href="https://bo.nalog.gov.ru/search?query=3801146254" target="_blank" rel="noopener noreferrer"><span>ФНС: бухгалтерская отчётность</span><small>bo.nalog.gov.ru, ГИР БО</small><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></li>
+        <li class="rise" style="--d:150ms"><a href="https://checko.ru/company/snk-1183850023950" target="_blank" rel="noopener noreferrer"><span>Checko: профиль компании</span><small>checko.ru, финансы и&nbsp;надёжность</small><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></li>
+        <li class="rise" style="--d:200ms"><a href="https://zachestnyibiznes.ru/search?query=3801146254" target="_blank" rel="noopener noreferrer"><span>Законно и&nbsp;честно: поиск по&nbsp;ИНН</span><small>zachestnyibiznes.ru, контрагент</small><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></li>
+        <li class="rise" style="--d:250ms"><a href="https://kad.arbitr.ru/" target="_blank" rel="noopener noreferrer"><span>Картотека арбитражных дел</span><small>kad.arbitr.ru, введите ИНН в&nbsp;поиск</small><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></li>
+      </ul>
+      <div class="tomain rise">
+        <p>Регионы доставки, реквизиты и&nbsp;всё о&nbsp;компании на&nbsp;главной странице.</p>
+        <a class="btn btn--line" href="../"><span class="btn__fill"></span><span class="btn__label">Перейти на&nbsp;главную<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg></span></a>
+      </div>
+    </section>
+
     <section class="sec order" id="order">
       <div class="order__side">
         <h2 class="rise">Рассчитаем цену<br>и&nbsp;срок поставки</h2>
@@ -130,7 +161,7 @@
         <div class="wide mapbox">
           <span class="mapbox__label">Точка доставки на&nbsp;карте<em>необязательно</em></span>
           <div id="map" class="map" role="application" aria-label="Карта: нажмите, чтобы отметить место доставки"></div>
-          <p class="mapbox__info" id="mapInfo">Нажмите на&nbsp;карту, чтобы отметить место разгрузки.</p>
+          <p class="mapbox__info" id="mapInfo">Двигайте карту мышью, колесо приближает. Нажмите, чтобы отметить место разгрузки.</p>
           <input type="hidden" name="coords" id="coords">
         </div>
 

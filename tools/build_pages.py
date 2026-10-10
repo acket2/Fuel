@@ -127,10 +127,10 @@ TEMPLATE = Template('''<!doctype html>
 <header class="top" id="top">
   <a class="logo rise" style="--d:300ms" href="../" aria-label="ООО «СНК», на главную">СНК</a>
   <nav class="nav rise" style="--d:420ms" aria-label="Основная навигация">
-    <a href="../#fuel">Топливо</a>
-    <a href="../#calc">Калькулятор</a>
+    <a href="#fuel">Топливо</a>
+    <a href="#calc">Калькулятор</a>
     <a href="../#regions">Регионы</a>
-    <a href="../#verify">Проверка</a>
+    <a href="#verify">Проверка</a>
     <a href="#order">Заявка</a>
     <a class="nav__tel" href="tel:89041480038">8 (904) 148-00-38</a>
     <button class="theme" id="theme" type="button" aria-label="Светлая тема" aria-pressed="false">
@@ -182,6 +182,10 @@ TEMPLATE = Template('''<!doctype html>
         <a href="tel:89041480038">8 (904) 148-00-38</a>, <a href="https://wa.me/79041480038" target="_blank" rel="noopener">WhatsApp</a>, <a href="https://t.me/+79041480038" target="_blank" rel="noopener">Telegram</a> или <a href="mailto:Worldbaikal@mail.ru">Worldbaikal@mail.ru</a></p>
     </section>
 
+$calc
+
+$verify
+
     <section class="sec order" id="order">
       <div class="order__side">
         <h2 class="rise">Рассчитаем цену<br>и&nbsp;срок поставки</h2>
@@ -210,7 +214,7 @@ TEMPLATE = Template('''<!doctype html>
         <div class="wide mapbox">
           <span class="mapbox__label">Точка доставки на&nbsp;карте<em>необязательно</em></span>
           <div id="map" class="map" role="application" aria-label="Карта: нажмите, чтобы отметить место доставки"></div>
-          <p class="mapbox__info" id="mapInfo">Нажмите на&nbsp;карту, чтобы отметить место разгрузки.</p>
+          <p class="mapbox__info" id="mapInfo">Двигайте карту мышью, колесо приближает. Нажмите, чтобы отметить место разгрузки.</p>
           <input type="hidden" name="coords" id="coords">
         </div>
 
@@ -272,12 +276,29 @@ def jsonld(area_type, area_name, title):
 def render(slug, **kw):
     path = OUT / slug / 'index.html'
     path.parent.mkdir(exist_ok=True)
-    path.write_text(TEMPLATE.substitute(rows=ROWS, footcities=FOOT_CITIES, footregions=FOOT_REGIONS, **kw), encoding='utf-8')
+    path.write_text(TEMPLATE.substitute(rows=ROWS, footcities=FOOT_CITIES, footregions=FOOT_REGIONS, calc=CALC, verify=VERIFY, **kw), encoding='utf-8')
     return path
+
+
+def shared_sections():
+    """Калькулятор и проверку компании берём с главной, чтобы не держать две копии разметки."""
+    main = (OUT / 'index.html').read_text(encoding='utf-8')
+    calc = re.search(r'    <section class="sec calc" id="calc">.*?</section>', main, re.S).group(0)
+    verify = re.search(r'    <section class="sec verify" id="verify">.*?</section>', main, re.S).group(0)
+    verify = verify.replace('class="sec verify"', 'class="sec sec--alt verify"')  # чередование фона на странице города
+    tomain = ('''      <div class="tomain rise">
+        <p>Регионы доставки, реквизиты и&nbsp;всё о&nbsp;компании на&nbsp;главной странице.</p>
+        <a class="btn btn--line" href="../"><span class="btn__fill"></span><span class="btn__label">Перейти на&nbsp;главную<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg></span></a>
+      </div>
+    </section>''')
+    verify = verify[:verify.rfind('    </section>')] + tomain
+    return calc, verify
 
 
 def build():
     made = []
+    global CALC, VERIFY
+    CALC, VERIFY = shared_sections()
     for c in CITIES:
         r = REGIONS[c['region']]
         title = f'Дизельное топливо {c["in"]} с доставкой оптом | ООО «СНК»'

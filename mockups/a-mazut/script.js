@@ -63,6 +63,7 @@ const placeInp = document.getElementById('place');
 const placesList = document.getElementById('places');
 const coordsInp = document.getElementById('coords');
 const mapInfo = document.getElementById('mapInfo');
+const HINT = mapInfo.textContent;
 let placeAuto = false; // населённый пункт подставлен с карты, а не введён руками
 
 const map = L.map('map', { scrollWheelZoom: false, attributionControl: true }).setView(REGIONS.irkutsk.center, REGIONS.irkutsk.zoom);
@@ -71,6 +72,18 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>',
 }).addTo(map);
 map.attributionControl.setPrefix(false);
+
+// Колесо мыши приближает карту, если курсор задержался на ней; при обычной прокрутке страницы карта не перехватывает колесо
+let wheelTimer = null;
+const mapBox = map.getContainer();
+mapBox.addEventListener('mousemove', () => {
+  if (!wheelTimer && !map.scrollWheelZoom.enabled()) wheelTimer = setTimeout(() => map.scrollWheelZoom.enable(), 500);
+});
+// колесо, пока зум выключен, значит человек листает страницу: начинаем отсчёт заново
+mapBox.addEventListener('wheel', () => {
+  if (!map.scrollWheelZoom.enabled()) { clearTimeout(wheelTimer); wheelTimer = null; }
+}, { passive: true });
+mapBox.addEventListener('mouseleave', () => { clearTimeout(wheelTimer); wheelTimer = null; map.scrollWheelZoom.disable(); });
 const pin = L.divIcon({ className: '', html: '<div class="pin"></div>', iconSize: [18, 18], iconAnchor: [9, 9] });
 let marker = null;
 
@@ -152,7 +165,7 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
     if (!res.ok) throw new Error(res.error);
     f.reset(); coordsInp.value = ''; applyPreset();
     if (marker) { marker.remove(); marker = null; }
-    mapInfo.textContent = 'Нажмите на карту, чтобы отметить место разгрузки.';
+    mapInfo.textContent = HINT;
     status.textContent = 'Заявка отправлена. Менеджер перезвонит вам.';
   } catch {
     status.innerHTML = 'Не получилось отправить. Позвоните: <a href="tel:89041480038">8 (904) 148-00-38</a>';
