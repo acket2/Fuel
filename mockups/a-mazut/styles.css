@@ -200,6 +200,8 @@ p { max-width: 56ch; text-wrap: pretty; }
 .form { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px 40px; background: var(--surface); padding: clamp(24px, 4vw, 56px); }
 .form label, .mapbox__label { display: grid; gap: 8px; font-size: 13px; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-3); }
 .form .wide { grid-column: 1 / -1; }
+.form .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; } /* ловушка для спам-ботов */
+.status a { color: var(--ink); box-shadow: 0 1px 0 var(--accent); }
 .form input, .form select {
   font: 400 18px/1.4 var(--body); letter-spacing: 0; text-transform: none; color: var(--ink);
   background: transparent; border: 0; border-bottom: 1px solid var(--line); border-radius: 0;

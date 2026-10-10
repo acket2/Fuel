@@ -73,7 +73,7 @@ regionSel.addEventListener('change', () => { if (placeAuto) placeInp.value = '';
 fillPlaces();
 
 // Ввели населённый пункт: находим его и ставим точку в центр
-// ponytail: публичный Nominatim (до 1 запроса в секунду); в рабочей версии заменить на геокодер Яндекса с ключом
+// ponytail: публичный Nominatim OpenStreetMap, без ключа, до 1 запроса в секунду; для формы заявок этого хватает
 placeInp.addEventListener('change', async () => {
   placeAuto = false;
   const q = placeInp.value.trim();
@@ -101,12 +101,36 @@ map.on('click', async (e) => {
   } catch { /* без названия, координат достаточно */ }
 });
 
-// Макет: отправка отключена
-document.getElementById('orderForm').addEventListener('submit', (e) => {
+// ---------- Отправка заявки: Google Apps Script -> Telegram менеджеру (код в bot/apps-script.gs) ----------
+// Адрес веб-приложения Apps Script. Получатель (Telegram, почта) меняется в свойствах скрипта, не здесь.
+const LEAD_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzeogJT_la-8lQZL6IBlfrMPNV34mkzyb57yOqZ38737BcasfvlsEmSfsDzaezlD0RY/exec';
+
+document.getElementById('orderForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const f = e.target;
+  const btn = f.querySelector('button[type="submit"]');
   const status = document.getElementById('formStatus');
   if (f.phone.value.replace(/\D/g, '').length < 10) { status.textContent = 'Укажите телефон, чтобы менеджер мог перезвонить.'; f.phone.focus(); return; }
   if (!f.place.value.trim() && !coordsInp.value) { status.textContent = 'Укажите населённый пункт или отметьте точку на карте.'; f.place.focus(); return; }
-  status.textContent = 'Макет: заявка не отправляется. В рабочей версии она уйдёт менеджеру вместе с координатами точки.';
+  if (!LEAD_ENDPOINT) { status.textContent = 'Макет: адрес бота ещё не подключён, заявка не отправлена.'; return; }
+
+  const data = {
+    phone: f.phone.value, region: regionSel.options[regionSel.selectedIndex].text,
+    place: f.place.value, coords: coordsInp.value, volume: f.volume.value, company: f.company.value,
+  };
+  btn.disabled = true;
+  status.textContent = 'Отправляем...';
+  try {
+    // text/plain без заголовков: простой запрос, Apps Script принимает его без предварительной проверки CORS
+    const res = await fetch(LEAD_ENDPOINT, { method: 'POST', body: JSON.stringify(data) }).then((r) => r.json());
+    if (!res.ok) throw new Error(res.error);
+    f.reset(); coordsInp.value = ''; fillPlaces();
+    if (marker) { marker.remove(); marker = null; }
+    mapInfo.textContent = 'Нажмите на карту, чтобы отметить место разгрузки.';
+    status.textContent = 'Заявка отправлена. Менеджер перезвонит вам.';
+  } catch {
+    status.innerHTML = 'Не получилось отправить. Позвоните: <a href="tel:89041480038">8 (904) 148-00-38</a>';
+  } finally {
+    btn.disabled = false;
+  }
 });
