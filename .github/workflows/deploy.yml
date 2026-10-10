@@ -21,24 +21,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Install dependencies
-        run: npm install --force
-
-      - name: Build
-        run: npx vite build
-
-      - name: Copy design mockups
-        run: cp -r mockups dist/mockups
-
+      # Сайт статический, сборка не нужна: публикуем папку нового сайта как корень
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist
+          path: ./mockups/a-mazut
 
   deploy:
     environment:
