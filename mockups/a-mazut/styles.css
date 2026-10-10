@@ -160,14 +160,30 @@ p { max-width: 56ch; text-wrap: pretty; }
 .conv input:hover { border-color: var(--ink-3); }
 .conv input:focus-visible { outline: 0; border-color: var(--accent); box-shadow: 0 1px 0 var(--accent); }
 .conv label:last-of-type input { color: var(--accent); }
-.conv__f { grid-column: 1 / -1; font-size: 14px; color: var(--ink-3); }
 @media (max-width: 760px) { .conv { grid-template-columns: 1fr; } }
 
 /* полноэкранная фотополоса */
 .band { height: clamp(320px, 60vh, 640px); overflow: hidden; }
 .band img { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(.75) contrast(1.08) brightness(.8); }
 
+/* страницы городов и регионов */
+.crumbs { font-size: 14px; color: var(--ink-3); }
+.crumbs a { color: var(--ink-2); transition: color 320ms var(--ease); }
+.crumbs a:hover { color: var(--accent); }
+.place__text { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px clamp(32px, 5vw, 80px); width: 100%; max-width: 1280px; }
+.place__text p:last-child { color: var(--ink-2); align-self: end; }
+@media (max-width: 860px) { .place__text { grid-template-columns: 1fr; } }
+.near, .season { color: var(--ink-2); max-width: 62ch; }
+.season { padding-left: 20px; box-shadow: inset 1px 0 0 var(--accent); }
+.near a, .towns a, .foot__geo a { color: var(--ink); box-shadow: 0 1px 0 var(--line); transition: color 320ms var(--ease), box-shadow 320ms var(--ease); }
+.near a:hover, .towns a:hover, .foot__geo a:hover { color: var(--accent); box-shadow: 0 1px 0 var(--accent); }
+.towns { display: grid; gap: 16px; padding-top: 28px; box-shadow: 0 -1px 0 var(--line); width: 100%; max-width: 1280px; }
+.towns h3 { font-size: clamp(1.3rem, 2vw, 1.8rem); }
+.towns p { max-width: 90ch; color: var(--ink-2); line-height: 1.9; }
+
 /* регионы: только названия */
+.reg h3 a { transition: color 320ms var(--ease); }
+.reg h3 a:hover { color: var(--accent); }
 .reg { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 48px; width: 100%; max-width: 1280px; }
 .reg li { padding: 28px 0 32px; box-shadow: 0 -1px 0 var(--line); display: grid; grid-template-columns: 48px 1fr; align-items: baseline; gap: 12px; }
 .reg__n { font: 400 14px/1 var(--body); letter-spacing: .18em; color: var(--accent); }
@@ -235,6 +251,9 @@ p { max-width: 56ch; text-wrap: pretty; }
 .foot a { display: inline-flex; align-items: center; min-height: 44px; transition: color 320ms var(--ease); }
 .foot a:hover { color: var(--accent); }
 .foot__req { color: var(--ink-3); font-size: 14px; }
+.foot__geo { grid-column: 1 / -1; display: grid; gap: 4px; padding-top: 24px; box-shadow: 0 -1px 0 var(--line); font-size: 14px; color: var(--ink-3); }
+.foot__geo p { max-width: none; }
+.foot__geo a { min-height: 32px; }
 @media (max-width: 760px) { .foot { grid-template-columns: 1fr; } }
 
 /* панель связи на телефоне */

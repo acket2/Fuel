@@ -27,11 +27,13 @@ function fromLit() {
   const l = num(cLit.value), d = num(cDen.value);
   if (l > 0 && d > 0) cTon.value = fmt(l * 1000 / d, 0);
 }
-cTon.addEventListener('input', fromTon);
-cDen.addEventListener('input', fromTon);
-cLit.addEventListener('input', fromLit);
-// После ввода приводим числа к виду «120 000» и «0,850»
-[[cTon, 0], [cDen, 3], [cLit, 2]].forEach(([el, d]) => el.addEventListener('blur', () => { const v = num(el.value); if (v > 0) el.value = fmt(v, d); }));
+if (cTon) { // калькулятор есть только на главной
+  cTon.addEventListener('input', fromTon);
+  cDen.addEventListener('input', fromTon);
+  cLit.addEventListener('input', fromLit);
+  // После ввода приводим числа к виду «120 000» и «0,850»
+  [[cTon, 0], [cDen, 3], [cLit, 2]].forEach(([el, d]) => el.addEventListener('blur', () => { const v = num(el.value); if (v > 0) el.value = fmt(v, d); }));
+}
 console.assert(Math.abs(100000 * 0.85 / 1000 - 85) < 1e-9, 'калькулятор: 100 000 ₽/т при 0,85 должно быть 85 ₽/л');
 
 // ---------- Заявка: регион, населённый пункт, точка на карте ----------
@@ -70,7 +72,16 @@ function fillPlaces() {
   map.setView(r.center, r.zoom);
 }
 regionSel.addEventListener('change', () => { if (placeAuto) placeInp.value = ''; fillPlaces(); });
-fillPlaces();
+
+// Страница города или региона: форма приходит с уже выбранным регионом, пунктом и центром карты
+const preset = document.getElementById('orderForm').dataset;
+function applyPreset() {
+  if (preset.region) regionSel.value = preset.region;
+  fillPlaces();
+  if (preset.place) placeInp.value = preset.place;
+  if (preset.center) map.setView(preset.center.split(',').map(Number), 11);
+}
+applyPreset();
 
 // Ввели населённый пункт: находим его и ставим точку в центр
 // ponytail: публичный Nominatim OpenStreetMap, без ключа, до 1 запроса в секунду; для формы заявок этого хватает
@@ -124,7 +135,7 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
     // text/plain без заголовков: простой запрос, Apps Script принимает его без предварительной проверки CORS
     const res = await fetch(LEAD_ENDPOINT, { method: 'POST', body: JSON.stringify(data) }).then((r) => r.json());
     if (!res.ok) throw new Error(res.error);
-    f.reset(); coordsInp.value = ''; fillPlaces();
+    f.reset(); coordsInp.value = ''; applyPreset();
     if (marker) { marker.remove(); marker = null; }
     mapInfo.textContent = 'Нажмите на карту, чтобы отметить место разгрузки.';
     status.textContent = 'Заявка отправлена. Менеджер перезвонит вам.';
