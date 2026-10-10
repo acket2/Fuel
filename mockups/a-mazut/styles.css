@@ -309,3 +309,8 @@ p { max-width: 56ch; text-wrap: pretty; }
 /* переход со страницы города на главную */
 .tomain { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 32px; width: 100%; max-width: 1280px; padding-top: 28px; box-shadow: 0 -1px 0 var(--line); }
 .tomain p { color: var(--ink-2); }
+
+/* точка на карте обязательна: подсветка, если её нет */
+.mapbox__label .req { color: var(--accent-ink); }
+.mapbox.is-error .map { box-shadow: 0 0 0 2px var(--accent-ink); }
+.mapbox.is-error .mapbox__info { color: var(--accent-ink); }

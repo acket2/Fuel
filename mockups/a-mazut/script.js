@@ -65,6 +65,8 @@ const coordsInp = document.getElementById('coords');
 const mapInfo = document.getElementById('mapInfo');
 const HINT = mapInfo.textContent;
 let placeAuto = false; // населённый пункт подставлен с карты, а не введён руками
+let pointSet = false;  // точку разгрузки человек отметил сам: без неё заявка не уходит
+const mapWrap = document.querySelector('.mapbox');
 
 const map = L.map('map', { scrollWheelZoom: false, attributionControl: true }).setView(REGIONS.irkutsk.center, REGIONS.irkutsk.zoom);
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -123,7 +125,8 @@ placeInp.addEventListener('change', async () => {
     const [hit] = await fetch(url).then((r) => r.json());
     if (!hit) { mapInfo.textContent = 'Не нашли этот пункт на карте. Отметьте место вручную.'; return; }
     map.setView([+hit.lat, +hit.lon], 12);
-    setPoint(+hit.lat, +hit.lon, 'Центр населённого пункта, уточните место разгрузки кликом.');
+    setPoint(+hit.lat, +hit.lon, 'Это центр населённого пункта. Нажмите на карте точное место разгрузки.');
+    pointSet = false;
   } catch { mapInfo.textContent = 'Карта не ответила. Отметьте место вручную или опишите его словами.'; }
 });
 
@@ -131,6 +134,8 @@ placeInp.addEventListener('change', async () => {
 map.on('click', async (e) => {
   const { lat, lng } = e.latlng;
   setPoint(lat, lng);
+  pointSet = true;
+  mapWrap.classList.remove('is-error');
   if (placeInp.value.trim() && !placeAuto) return;
   try {
     const url = `https://nominatim.openstreetmap.org/reverse?format=json&zoom=14&accept-language=ru&lat=${lat}&lon=${lng}`;
@@ -150,7 +155,12 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
   const btn = f.querySelector('button[type="submit"]');
   const status = document.getElementById('formStatus');
   if (f.phone.value.replace(/\D/g, '').length < 10) { status.textContent = 'Укажите телефон, чтобы менеджер мог перезвонить.'; f.phone.focus(); return; }
-  if (!f.place.value.trim() && !coordsInp.value) { status.textContent = 'Укажите населённый пункт или отметьте точку на карте.'; f.place.focus(); return; }
+  if (!pointSet) {
+    status.textContent = 'Отметьте на карте точное место разгрузки: без точки менеджер не посчитает километраж.';
+    mapWrap.classList.add('is-error');
+    mapWrap.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    return;
+  }
   if (!LEAD_ENDPOINT) { status.textContent = 'Макет: адрес бота ещё не подключён, заявка не отправлена.'; return; }
 
   const data = {
@@ -165,6 +175,7 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
     if (!res.ok) throw new Error(res.error);
     f.reset(); coordsInp.value = ''; applyPreset();
     if (marker) { marker.remove(); marker = null; }
+    pointSet = false;
     mapInfo.textContent = HINT;
     status.textContent = 'Заявка отправлена. Менеджер перезвонит вам.';
   } catch {
