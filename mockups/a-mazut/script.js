@@ -165,7 +165,7 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
 
   const data = {
     phone: f.phone.value, region: regionSel.options[regionSel.selectedIndex].text,
-    place: f.place.value, coords: coordsInp.value, volume: f.volume.value, company: f.company.value,
+    place: f.place.value, coords: coordsInp.value, volume: f.volume.value, company: '', hp: f.hp_check.value,
   };
   btn.disabled = true;
   status.textContent = 'Отправляем...';

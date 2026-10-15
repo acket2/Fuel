@@ -13,7 +13,7 @@ const MAX_LEN = 200; // обрезаем каждое поле, чтобы в б
 function doPost(e) {
   try {
     const d = JSON.parse((e && e.postData && e.postData.contents) || '{}');
-    if (d.company) return reply({ ok: true }); // ловушка для ботов: людям это поле не видно
+    if (d.hp) return reply({ ok: true }); // ловушка для ботов: людям это поле не видно (имя не должно походить на анкетное, иначе автозаполнение его заполнит)
 
     const lead = {
       phone: clean(d.phone),
@@ -53,6 +53,8 @@ function doPost(e) {
     }
 
     // Заявку не теряем: если Telegram не ответил, но письмо ушло, сайт всё равно скажет «принято»
+    // успех только если ушло хоть куда-то; если Telegram не принял, оставляем запись в журнале выполнения
+    if (tg.getResponseCode() !== 200) console.error('Telegram: ' + tg.getResponseCode() + ' ' + tg.getContentText());
     return reply({ ok: tg.getResponseCode() === 200 || !!mailTo });
   } catch (err) {
     console.error(err);
