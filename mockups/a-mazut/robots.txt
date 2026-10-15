@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://snk-group38.ru/sitemap.xml

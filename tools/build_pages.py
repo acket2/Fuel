@@ -9,6 +9,7 @@ from pathlib import Path
 from string import Template
 
 OUT = Path(__file__).resolve().parent.parent / 'mockups' / 'a-mazut'
+DOMAIN = 'https://snk-group38.ru'  # основной адрес сайта: от него считаются canonical и sitemap.xml
 
 REGIONS = {
     'irkutsk': {'slug': 'irkutskaya-oblast', 'name': 'Иркутская область', 'in': 'в Иркутской области',
@@ -109,6 +110,8 @@ TEMPLATE = Template('''<!doctype html>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>$title</title>
   <meta name="description" content="$desc">
+  <link rel="canonical" href="$canonical">
+  <meta property="og:url" content="$canonical">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ru_RU">
   <meta property="og:title" content="$title">
@@ -276,7 +279,7 @@ def jsonld(area_type, area_name, title):
 def render(slug, **kw):
     path = OUT / slug / 'index.html'
     path.parent.mkdir(exist_ok=True)
-    path.write_text(TEMPLATE.substitute(rows=ROWS, footcities=FOOT_CITIES, footregions=FOOT_REGIONS, calc=CALC, verify=VERIFY, **kw), encoding='utf-8')
+    path.write_text(TEMPLATE.substitute(rows=ROWS, footcities=FOOT_CITIES, footregions=FOOT_REGIONS, calc=CALC, verify=VERIFY, canonical=f'{DOMAIN}/{slug}/', **kw), encoding='utf-8')
     return path
 
 
@@ -337,6 +340,17 @@ if __name__ == '__main__':
         html = p.read_text(encoding='utf-8')
         assert '$' not in html.replace('$(', ''), f'незаменённое поле в {p}'
         assert 'id="orderForm"' in html and 'data-region="' in html, p
-    print(f'Собрано страниц: {len(pages)}')
+    # карта сайта, robots.txt и CNAME: главная и все собранные страницы
+    from datetime import date
+    urls = [f'{DOMAIN}/'] + [f'{DOMAIN}/{p.parent.name}/' for p in pages]
+    today = date.today().isoformat()
+    body = ''.join(f'  <url><loc>{u}</loc><lastmod>{today}</lastmod></url>\n' for u in urls)
+    (OUT / 'sitemap.xml').write_text(
+        '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + body + '</urlset>\n',
+        encoding='utf-8')
+    (OUT / 'robots.txt').write_text(f'User-agent: *\nAllow: /\n\nSitemap: {DOMAIN}/sitemap.xml\n', encoding='utf-8')
+    (OUT / 'CNAME').write_text('snk-group38.ru\n', encoding='utf-8')
+    assert 'rel="canonical"' in pages[0].read_text(encoding='utf-8')
+    print(f'Собрано страниц: {len(pages)}; sitemap.xml: {len(urls)} адресов')
     for p in pages:
         print(' ', p.relative_to(OUT.parent.parent))
