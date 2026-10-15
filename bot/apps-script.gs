@@ -53,9 +53,10 @@ function doPost(e) {
     }
 
     // Заявку не теряем: если Telegram не ответил, но письмо ушло, сайт всё равно скажет «принято»
-    // успех только если ушло хоть куда-то; если Telegram не принял, оставляем запись в журнале выполнения
-    if (tg.getResponseCode() !== 200) console.error('Telegram: ' + tg.getResponseCode() + ' ' + tg.getContentText());
-    return reply({ ok: tg.getResponseCode() === 200 || !!mailTo });
+    // Честный ответ сайту: «ок» только если Telegram принял сообщение. Письмо на почту идёт как запасной канал.
+    const delivered = tg.getResponseCode() === 200;
+    if (!delivered) console.error('Telegram не принял заявку: ' + tg.getResponseCode() + ' ' + tg.getContentText());
+    return reply({ ok: delivered, mail: !!mailTo });
   } catch (err) {
     console.error(err);
     return reply({ ok: false, error: 'server' });
@@ -83,4 +84,24 @@ function testDoPost() {
     phone: '+7 900 000-00-00', region: 'Иркутская область', place: 'Братск', coords: '56.15171, 101.63349', volume: '10',
   }) } });
   console.log(out.getContent());
+}
+
+/**
+ * Диагностика: запустите эту функцию в редакторе и посмотрите «Журнал выполнения».
+ * Покажет, правильно ли заданы TG_TOKEN и TG_CHAT_ID, и пришлёт тестовое сообщение.
+ */
+function checkTelegram() {
+  const props = PropertiesService.getScriptProperties();
+  const token = (props.getProperty('TG_TOKEN') || '').trim();
+  const chat = (props.getProperty('TG_CHAT_ID') || '').trim();
+  console.log('TG_TOKEN: ' + (token ? 'задан, длина ' + token.length + ', начало ' + token.slice(0, 10) + '...' : 'НЕ ЗАДАН'));
+  console.log('TG_CHAT_ID: ' + (chat ? '"' + chat + '"' : 'НЕ ЗАДАН'));
+  if (!token || !chat) return;
+  const me = UrlFetchApp.fetch('https://api.telegram.org/bot' + token + '/getMe', { muteHttpExceptions: true });
+  console.log('getMe: ' + me.getResponseCode() + ' ' + me.getContentText().slice(0, 160));
+  const msg = UrlFetchApp.fetch('https://api.telegram.org/bot' + token + '/sendMessage', {
+    method: 'post', contentType: 'application/json', muteHttpExceptions: true,
+    payload: JSON.stringify({ chat_id: chat, text: 'Проверка из скрипта: если вы это видите, заявки будут приходить сюда.' }),
+  });
+  console.log('sendMessage: ' + msg.getResponseCode() + ' ' + msg.getContentText().slice(0, 200));
 }
